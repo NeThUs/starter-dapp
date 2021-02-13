@@ -4,7 +4,6 @@ import { faBan, faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { ReactComponent as Logo } from '../../assets/images/logo.svg';
 import State from 'components/State';
 import { useContext } from 'context';
-import LedgerLogin from './Login/Ledger';
 import WalletLogin from './Login/Wallet';
 
 const Home = () => {
@@ -34,9 +33,7 @@ const Home = () => {
               <p className="lead mb-spacer">
                 Delegate Elrond ({egldLabel}) and earn up to 25% APY!
               </p>
-              <p className="mb-spacer">Please select your login method:</p>
               <div>
-                <LedgerLogin />
                 <WalletLogin />
               </div>
             </div>
