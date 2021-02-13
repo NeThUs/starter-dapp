@@ -29,7 +29,7 @@ export const networks: NetworkType[] = [
     apiAddress: 'https://testnet-api.elrond.com',
     gatewayAddress: 'https://testnet-gateway.elrond.com',
     explorerAddress: 'http://testnet-explorer.elrond.com/',
-    delegationContract: 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs',
+    delegationContract: 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqhllllsajxzat',
     auctionContract: 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l',
     stakingContract: 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqllls0lczs7',
   },
