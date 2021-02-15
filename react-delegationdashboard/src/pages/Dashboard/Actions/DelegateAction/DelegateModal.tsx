@@ -57,7 +57,7 @@ const DelegateModal = ({ show, balance, handleClose, handleContinue }: DelegateM
               amount: '10',
             }}
             onSubmit={values => {
-              handleContinue(values.amount);
+              handleContinue(values.amount.toString());
             }}
             validationSchema={object().shape({
               amount: string()
@@ -104,6 +104,8 @@ const DelegateModal = ({ show, balance, handleClose, handleContinue }: DelegateM
                           id="amount"
                           name="amount"
                           data-testid="amount"
+                          min={'10'}
+                          step={'any'}
                           required={true}
                           value={values.amount}
                           autoComplete="off"
