@@ -31,6 +31,7 @@ const Views = () => {
     return percentage ? percentage.toFixed(2) : '...';
   };
 
+  const aprAfterAgencyFee = (parseFloat(aprPercentage) - (parseFloat(contractOverview.serviceFee as string) / 100 * parseFloat(aprPercentage) as number)).toString();
   const isAdmin = () => {
     let loginAddress = new Address(address).hex();
     return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
@@ -92,11 +93,11 @@ const Views = () => {
       />
       <StatCard
         title="Computed APR"
-        value={aprPercentage}
+        value={aprAfterAgencyFee}
         valueUnit=""
         color="orange"
         svg="leaf-solid.svg"
-        percentage="Anual percentage rate"
+        percentage="Annual percentage rate"
         tooltipText="This is an aproximate APR calculation for this year based on the current epoch"
       />
       <StatCard
