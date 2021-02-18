@@ -18,7 +18,8 @@ const Views = () => {
     numberOfActiveNodes,
     address,
     contractOverview,
-    aprPercentage,
+    aprPercentageAfterFee,
+    numUsers,
   } = useContext();
   const [networkStake, setNetworkStake] = useState(new NetworkStake());
 
@@ -31,8 +32,10 @@ const Views = () => {
     return percentage ? percentage.toFixed(2) : '...';
   };
 
-  const aprAfterAgencyFee = (parseFloat(aprPercentage) - (parseFloat(contractOverview.serviceFee as string) / 100 * parseFloat(aprPercentage) as number)).toString();
   const isAdmin = () => {
+    if (location.pathname == '/') {
+      return false;
+    }
     let loginAddress = new Address(address).hex();
     return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
   };
@@ -54,6 +57,43 @@ const Views = () => {
 
   return (
     <div className="cards d-flex flex-wrap mr-spacer">
+      <StatCard
+        title="Number of Users"
+        value={numUsers.toString()}
+        color="orange"
+        svg="user.svg"
+        percentage={'Active users delegating with us!'}
+      />
+      <StatCard
+        title="Number of Nodes"
+        value={numberOfActiveNodes}
+        valueUnit=""
+        color="purple"
+        svg="nodes.svg"
+        percentage={`${getPercentage(
+          numberOfActiveNodes,
+          networkStake.TotalValidators.toString()
+        )}% of total nodes`}
+      />
+      <StatCard
+        title="Computed APR"
+        value={aprPercentageAfterFee}
+        valueUnit="%"
+        color="orange"
+        svg="leaf-solid.svg"
+        percentage="Annual percentage rate"
+        tooltipText="This is an aproximate APR calculation for this year based on the current epoch excluding the service fee"
+      />
+      <StatCard
+        title="Service Fee"
+        value={contractOverview.serviceFee || ''}
+        valueUnit="%"
+        color="red"
+        svg="service.svg"
+        percentage={'Agency fee per year excluded from APR'}
+      >
+        {location.pathname === '/owner' && <SetPercentageFeeAction />}
+      </StatCard>
       <StatCard
         title="Contract Stake"
         value={denominate({
@@ -80,35 +120,6 @@ const Views = () => {
           })
         )}% of total stake`}
       />
-      <StatCard
-        title="Number of Nodes"
-        value={numberOfActiveNodes}
-        valueUnit=""
-        color="purple"
-        svg="nodes.svg"
-        percentage={`${getPercentage(
-          numberOfActiveNodes,
-          networkStake.TotalValidators.toString()
-        )}% of total nodes`}
-      />
-      <StatCard
-        title="Computed APR"
-        value={aprAfterAgencyFee}
-        valueUnit=""
-        color="orange"
-        svg="leaf-solid.svg"
-        percentage="Annual percentage rate"
-        tooltipText="This is an aproximate APR calculation for this year based on the current epoch"
-      />
-      <StatCard
-        title="Service Fee"
-        value={contractOverview.serviceFee || ''}
-        valueUnit="%"
-        color="red"
-        svg="service.svg"
-      >
-        {location.pathname === '/owner' && <SetPercentageFeeAction />}
-      </StatCard>
       <StatCard
         title="Delegation Cap"
         value={contractOverview.maxDelegationCap || ''}

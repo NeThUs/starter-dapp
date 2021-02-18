@@ -40,7 +40,9 @@ export interface StateType {
   stakingContract?: string;
   totalActiveStake: string;
   numberOfActiveNodes: string;
+  numUsers: number;
   aprPercentage: string;
+  aprPercentageAfterFee: string;
   contractOverview: ContractOverview;
 }
 export const emptyAccount: AccountType = {
@@ -93,7 +95,9 @@ export const initialState = (optionalConfig?: NetworkType[]) => {
     contractOverview: emptyContractOverview,
     numberOfActiveNodes: '...',
     totalActiveStake: '...',
+    numUsers: 0,
     aprPercentage: '...',
+    aprPercentageAfterFee: '...',
   };
 };
 

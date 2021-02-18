@@ -12,7 +12,7 @@ import Navbar from './Navbar';
 const Layout = ({ children, page }: { children: React.ReactNode; page: string }) => {
   const dispatch = useDispatch();
   const { dapp, delegationContract, auctionContract } = useContext();
-  const { getContractConfig, getTotalActiveStake, getBlsKeys } = contractViews;
+  const { getContractConfig, getTotalActiveStake, getBlsKeys, getNumUsers } = contractViews;
 
   const getContractOverviewType = (value: QueryResponse) => {
     let delegationCap = denominate({
@@ -42,6 +42,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
 
   React.useEffect(() => {
     Promise.all([
+      getNumUsers(dapp, delegationContract),
       getContractConfig(dapp, delegationContract),
       getTotalActiveStake(dapp, delegationContract),
       getBlsKeys(dapp, delegationContract, auctionContract),
@@ -51,6 +52,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
     ])
       .then(
         ([
+          numUsers,
           contractOverview,
           {
             returnData: [activeStake],
@@ -61,8 +63,13 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
           networkConfig,
         ]) => {
           dispatch({
+            type: 'setNumUsers',
+            numUsers: numUsers.returnData[0].asNumber,
+          });
+          const scOverview = getContractOverviewType(contractOverview);
+          dispatch({
             type: 'setContractOverview',
-            contractOverview: getContractOverviewType(contractOverview),
+            contractOverview: scOverview,
           });
           dispatch({
             type: 'setTotalActiveStake',
@@ -72,23 +79,34 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             type: 'setNumberOfActiveNodes',
             numberOfActiveNodes: (blsKeys.length / 2).toString(),
           });
+          const APR = calculateAPR({
+            stats: new Stats(networkStats.Epoch),
+            networkConfig: new NetworkConfig(
+              networkConfig.TopUpFactor,
+              networkConfig.TopUpRewardsGradientPoint
+            ),
+            networkStake: new NetworkStake(
+              networkStake.TotalValidators,
+              networkStake.ActiveValidators,
+              networkStake.QueueSize,
+              networkStake.TotalStaked
+            ),
+            blsKeys: blsKeys,
+            totalActiveStake: activeStake.asBigInt.toString(),
+          });
           dispatch({
             type: 'setAprPercentage',
-            aprPercentage: calculateAPR({
-              stats: new Stats(networkStats.Epoch),
-              networkConfig: new NetworkConfig(
-                networkConfig.TopUpFactor,
-                networkConfig.TopUpRewardsGradientPoint
-              ),
-              networkStake: new NetworkStake(
-                networkStake.TotalValidators,
-                networkStake.ActiveValidators,
-                networkStake.QueueSize,
-                networkStake.TotalStaked
-              ),
-              blsKeys: blsKeys,
-              totalActiveStake: activeStake.asBigInt.toString(),
-            }),
+            aprPercentage: APR,
+          });
+          const aprPercentageAfterFee = (
+            parseFloat(APR) -
+            (((parseFloat(scOverview.serviceFee as string) / 100) * parseFloat(APR)) as number)
+          )
+            .toFixed(2)
+            .toString();
+          dispatch({
+            type: 'setAprPercentageAfterFee',
+            aprPercentageAfterFee,
           });
         }
       )

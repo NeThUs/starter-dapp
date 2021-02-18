@@ -5,14 +5,15 @@ import { ReactComponent as Logo } from '../../assets/images/logo.svg';
 import State from 'components/State';
 import { useContext } from 'context';
 import WalletLogin from './Login/Wallet';
+import Views from 'components/Overview/Cards';
 
 const Home = () => {
-  const { loading, error, loggedIn, egldLabel } = useContext();
+  const { loading, error, loggedIn, egldLabel, aprPercentageAfterFee} = useContext();
 
   const ref = React.useRef(null);
 
   return (
-    <div ref={ref} className="home d-flex flex-fill align-items-center">
+    <div ref={ref} className="home d-row flex-fill align-items-center">
       {error ? (
         <State
           icon={faBan}
@@ -26,13 +27,11 @@ const Home = () => {
         <State icon={faCircleNotch} iconClass="fa-spin text-primary" />
       ) : (
         <div className="m-auto login-container">
-          <div className="card my-spacer text-center">
+          <div className="card text-center">
             <div className="card-body p-spacer mx-lg-spacer">
-              <Logo className="logo mb-spacer" />
-              <h4 className="mb-spacer">Trust Staking Delegation Manager</h4>
-              <p className="lead mb-spacer">
-                Delegate ({egldLabel}) and earn up to 25% APY!
-              </p>
+              <Logo className="logo" />
+              <h4 className="">Delegation Manager</h4>
+              <p className="lead mb-spacer">Delegate {egldLabel} and earn up to {aprPercentageAfterFee}% APY!</p>
               <div>
                 <WalletLogin />
               </div>
@@ -40,6 +39,7 @@ const Home = () => {
           </div>
         </div>
       )}
+      <Views />
     </div>
   );
 };

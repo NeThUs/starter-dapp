@@ -11,7 +11,9 @@ export type ActionType =
   | { type: 'setBalance'; balance: StateType['account']['balance'] }
   | { type: 'setContractOverview'; contractOverview: StateType['contractOverview'] }
   | { type: 'setNumberOfActiveNodes'; numberOfActiveNodes: StateType['numberOfActiveNodes'] }
+  | { type: 'setNumUsers'; numUsers: StateType['numUsers'] }
   | { type: 'setTotalActiveStake'; totalActiveStake: StateType['totalActiveStake'] }
+  | { type: 'setAprPercentageAfterFee'; aprPercentageAfterFee: StateType['aprPercentageAfterFee'] }
   | { type: 'setAprPercentage'; aprPercentage: StateType['aprPercentage'] };
 
 export function reducer(state: StateType, action: ActionType): StateType {
@@ -74,6 +76,14 @@ export function reducer(state: StateType, action: ActionType): StateType {
       };
     }
 
+    case 'setNumUsers': {
+      const { numUsers } = action;
+      return {
+        ...state,
+        numUsers,
+      };
+    }
+
     case 'setTotalActiveStake': {
       const { totalActiveStake } = action;
       return {
@@ -87,6 +97,14 @@ export function reducer(state: StateType, action: ActionType): StateType {
       return {
         ...state,
         aprPercentage,
+      };
+    }
+
+    case 'setAprPercentageAfterFee': {
+      const { aprPercentageAfterFee } = action;
+      return {
+        ...state,
+        aprPercentageAfterFee,
       };
     }
 
