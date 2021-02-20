@@ -8,14 +8,20 @@ import ClaimRewardsAction from '../Actions/ClaimRewardsAction';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import State from 'components/State';
 import { denomination, decimals } from 'config';
+import StatCard from 'components/StatCard';
 
 const MyDelegation = () => {
   const { dapp, address, egldLabel, delegationContract, loading } = useContext();
   const dispatch = useDispatch();
-  const { getClaimableRewards, getUserActiveStake } = contractViews;
+  const {
+    getClaimableRewards,
+    getUserActiveStake,
+    getTotalCumulatedRewardsForUser,
+  } = contractViews;
   const [userActiveStake, setUserActiveStake] = React.useState('0');
   const [userActiveNominatedStake, setUserActiveNominatedStake] = React.useState('0');
   const [claimableRewards, setClaimableRewards] = React.useState('0');
+  const [cumulatedRewards, setCumulatedRewards] = React.useState('0');
   const [displayRewards, setDisplayRewards] = React.useState(false);
   const [displayUndelegate, setDisplayUndelegate] = React.useState(false);
 
@@ -36,6 +42,18 @@ const MyDelegation = () => {
         );
       })
       .catch(e => console.error('getClaimableRewards error', e));
+    getTotalCumulatedRewardsForUser(dapp, address, delegationContract)
+      .then(value => {
+        setCumulatedRewards(
+          denominate({
+            denomination,
+            decimals,
+            input: value.returnData[0]?.asBigInt.toString(),
+            showLastNonZeroDecimal: false,
+          }) || ''
+        );
+      })
+      .catch(e => console.error('getTotalCumulatedRewardsForUser error', e));
     getUserActiveStake(dapp, address, delegationContract)
       .then(value => {
         setUserActiveStake(
@@ -63,7 +81,6 @@ const MyDelegation = () => {
   };
 
   React.useEffect(getAllData, []);
-
   return (
     <>
       {loading ? (
@@ -72,11 +89,12 @@ const MyDelegation = () => {
         <div className="card mt-spacer">
           <div className="card-body p-spacer">
             <div className="d-flex flex-wrap align-items-center justify-content-between">
-              <p className="h6 mb-3">My Stake</p>
+              <p className="h6 mb-3">Dashboard</p>
               {userActiveStake !== String(0) && (
-                <div className="d-flex flex-wrap">
+                <div className="d-flex flex-wrap justify-content-between align-items-center">
                   <DelegateAction />
-                  {displayUndelegate && <UndelegateAction balance={userActiveNominatedStake}/>}
+                  {displayUndelegate && <UndelegateAction balance={userActiveNominatedStake} />}
+                  {displayRewards && <ClaimRewardsAction />}
                 </div>
               )}
             </div>
@@ -88,20 +106,29 @@ const MyDelegation = () => {
               />
             ) : (
               <div className="m-auto text-center py-spacer">
-                <div>
-                  <p className="m-0">Active Delegation</p>
-                  <p className="h4">
-                    {userActiveStake}{' '}
-                    {egldLabel}
-                  </p>
+                <div className="cards d-flex flex-wrap mr-spacer">
+                  <StatCard
+                    title="Active Delegation"
+                    value={`${userActiveStake} ${egldLabel}`}
+                    color="orange"
+                    svg="money-bag.svg"
+                    percentage={''}
+                  />
+                  <StatCard
+                    title="Claimable rewards"
+                    value={`${claimableRewards} ${egldLabel}`}
+                    color="orange"
+                    svg="save-money.svg"
+                    percentage={'This amount can be claimed or re-delegated'}
+                  />
+                  <StatCard
+                    title="Cumulated rewards"
+                    value={`${cumulatedRewards} ${egldLabel}`}
+                    color="orange"
+                    svg="dollar.svg"
+                    percentage={'This is the total reward you ever received!'}
+                  />
                 </div>
-                <div>
-                  <p className="text-muted">
-                    {claimableRewards}{' '}
-                    {egldLabel} Claimable rewards
-                  </p>
-                </div>
-                {displayRewards ? <ClaimRewardsAction /> : null}
               </div>
             )}
           </div>

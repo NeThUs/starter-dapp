@@ -18,7 +18,7 @@ const StatCard = ({
   return (
     <div className={`statcard card-bg-${color} text-white py-3 px-4 mb-spacer ml-spacer rounded`}>
       <div className="d-flex align-items-center justify-content-between mt-1 mb-2">
-        <div className="icon my-1 fill-white">
+        <div className="icon my-1 fill-white" style={{paddingBottom: '1px'}}>
           <SVG src={process.env.PUBLIC_URL + '/' + svg} className="text-white"></SVG>
         </div>
         <div>{children}</div>
