@@ -22,7 +22,7 @@ const DelegateModal = ({ show, balance, handleClose, handleContinue }: DelegateM
   const available = entireBalance({
     balance: balance,
     gasPrice: '12000000',
-    gasLimit: '12000000',
+    gasLimit: '20000000',
     denomination,
     decimals,
   });
