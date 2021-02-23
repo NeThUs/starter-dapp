@@ -11,7 +11,7 @@ import Navbar from './Navbar';
 
 const Layout = ({ children, page }: { children: React.ReactNode; page: string }) => {
   const dispatch = useDispatch();
-  const { dapp, delegationContract, auctionContract } = useContext();
+  const { dapp, delegationContract } = useContext();
   const { getContractConfig, getTotalActiveStake, getBlsKeys, getNumUsers } = contractViews;
 
   const getContractOverviewType = (value: QueryResponse) => {
@@ -45,7 +45,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
       getNumUsers(dapp, delegationContract),
       getContractConfig(dapp, delegationContract),
       getTotalActiveStake(dapp, delegationContract),
-      getBlsKeys(dapp, delegationContract, auctionContract),
+      getBlsKeys(dapp, delegationContract),
       dapp.apiProvider.getNetworkStats(),
       dapp.apiProvider.getNetworkStake(),
       dapp.proxy.getNetworkConfig(),

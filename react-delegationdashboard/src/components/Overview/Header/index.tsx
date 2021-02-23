@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import denominate from 'components/Denominate/formatters';
 import { Address } from '@elrondnetwork/erdjs/out';
 import { useContext, useDispatch } from '../../../context';
 import { denomination } from 'config';
 import { getItem } from 'storage/session';
+import denominate from 'components/Denominate/formatters';
 
 const Header = () => {
   const { pathname } = useLocation();
