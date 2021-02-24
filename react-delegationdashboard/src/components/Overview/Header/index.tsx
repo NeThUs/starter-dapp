@@ -55,7 +55,7 @@ const Header = () => {
         <div className="d-flex border-0 align-items-center justify-content-between">
           {isAdmin() && pathname !== '/owner' ? (
             <Link to="/owner" className="btn btn-primary btn-sm">
-              Admin
+              Owner
             </Link>
           ) : null}
           {pathname !== '/dashboard' ? (
