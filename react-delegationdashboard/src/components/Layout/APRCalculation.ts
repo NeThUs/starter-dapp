@@ -59,7 +59,6 @@ const calculateAPR = ({
   if (topUpReward > 0) {
     validatorTopUpReward *= topUpReward;
   }
-  console.log(topUpReward);
   const validatorBaseReward = (validatorBaseStake / networkBaseStake) * baseReward;
   const anualPercentageRate =
     (365 * (validatorTopUpReward + validatorBaseReward)) / validatorTotalStake;
