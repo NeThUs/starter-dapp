@@ -26,11 +26,11 @@ $light-red: #ffe2e630;
 $light-primary: #e1f0ff30;
 $disabled: #333;
 
-$card-bg: #f06725d6;
+$card-bg: #0c1f33;
 $text-muted: $muted;
 $brand-color: $white;
 $logo-height: 1.5rem;
-$bg-image: linear-gradient(143deg, #ffdb07 0%, #1adba2 86%);
+$bg-image:  #071e35;
 $footer-color: $white;
 
 $lead-font-size: 1.15rem;
@@ -99,7 +99,12 @@ $dropdown-link-disabled-color: $disabled;
 $dropdown-link-color: $primary;
 
 $link-hover-color: darken($primary, 7%);
-
+.btn-primary {
+  background: linear-gradient(188deg, #29eff0 10%, #4a98b5 70%) !important;
+}
+#closeButton {
+  background: #dc3545 !important;
+}
 $theme-colors: (
   'orange': $orange,
   'light-orange': $light-orange,

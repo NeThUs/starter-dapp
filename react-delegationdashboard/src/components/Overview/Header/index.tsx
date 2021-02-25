@@ -64,8 +64,8 @@ const Header = () => {
             </Link>
           ) : null}
           {loggedIn && (
-            <a href="/#" onClick={logOut} className="btn btn-primary btn-sm ml-3">
-              Close
+            <a href="/#" onClick={logOut} id="closeButton" className="btn btn-primary btn-sm ml-3">
+              Exit
             </a>
           )}
         </div>

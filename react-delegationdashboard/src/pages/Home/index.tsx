@@ -30,8 +30,9 @@ const Home = () => {
           <div className="card text-center">
             <div className="card-body p-spacer mx-lg-spacer">
               <Logo className="logo" />
-              <h4 className="">Delegation Manager</h4>
-              <p className="lead mb-spacer">Delegate {egldLabel} and earn up to {aprPercentageAfterFee}% APY!</p>
+              <hr className="divider"/>
+              <h4 className="title">Delegation Manager</h4>
+              <hr className="divider"/>
               <div>
                 <WalletLogin />
               </div>

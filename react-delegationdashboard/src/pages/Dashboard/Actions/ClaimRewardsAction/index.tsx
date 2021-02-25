@@ -12,11 +12,11 @@ const ClaimRewardsAction = () => {
         }}
         className="btn btn-primary ml-3 mb-3"
       >
-        Claim Rewards
+        Rewards
       </button>
       <ClaimRewardsModal
         show={showClaimRewardsModal}
-        title="Claim rewards"
+        title="Rewards Options"
         description="Choose what to do with your rewards"
         handleClose={() => {
           setShowClaimRewardsModal(false);

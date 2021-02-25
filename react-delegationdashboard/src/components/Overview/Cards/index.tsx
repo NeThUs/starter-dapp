@@ -62,7 +62,7 @@ const Views = () => {
         value={numUsers.toString()}
         color="orange"
         svg="user.svg"
-        percentage={'Active users delegating with us!'}
+        percentage={'Active users!'}
       />
       <StatCard
         title="Number of Nodes"
@@ -76,12 +76,12 @@ const Views = () => {
         )}% of total nodes`}
       />
       <StatCard
-        title="Computed APR"
+        title="Agency APR"
         value={aprPercentageAfterFee}
         valueUnit="%"
         color="orange"
         svg="leaf-solid.svg"
-        percentage="Annual percentage rate"
+        percentage="Annual percentage"
         tooltipText="This is an aproximate APR calculation for this year based on the current epoch excluding the service fee"
       />
       <StatCard
@@ -90,7 +90,7 @@ const Views = () => {
         valueUnit="%"
         color="red"
         svg="service.svg"
-        percentage={'Agency fee per year excluded from APR'}
+        percentage={'Agency fee per year'}
       >
         {location.pathname === '/owner' && <SetPercentageFeeAction />}
       </StatCard>
@@ -120,7 +120,7 @@ const Views = () => {
           })
         )}% of total stake`}
       />
-      {contractOverview.maxDelegationCap !== '0' && (
+      {contractOverview.maxDelegationCap !== '0' && contractOverview.maxDelegationCap !== '' && (
         <StatCard
           title="Delegation Cap"
           value={contractOverview.maxDelegationCap || ''}

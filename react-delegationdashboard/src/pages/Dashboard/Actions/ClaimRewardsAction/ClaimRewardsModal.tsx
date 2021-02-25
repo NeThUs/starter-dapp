@@ -31,17 +31,19 @@ const ClaimRewardsModal = ({ show, title, description, handleClose }: ClaimRewar
             {title}
           </p>
           <p className="mb-spacer">{description}</p>
-          <div className="d-flex justify-content-center align-items-center flex-wrap">
-            <ViewStatAction
-              actionTitle="Claim Rewards"
-              handleContinue={handleClaimRewards}
-              color="primary"
-            />
-            <ViewStatAction
-              actionTitle="Redelegate Rewards"
-              handleContinue={handleRedelegateRewards}
-              color="green"
-            />
+          <div className="d-row justify-content-center align-items-center flex-wrap">
+            <div className="d-flex justify-content-center align-items-center flex-wrap">
+              <ViewStatAction
+                actionTitle="Claim"
+                handleContinue={handleClaimRewards}
+                color="primary"
+              />
+              <ViewStatAction
+                actionTitle="Redelegate"
+                handleContinue={handleRedelegateRewards}
+                color="orange"
+              />
+            </div>
             <button id="closeButton" className="btn btn-link mt-spacer mx-2" onClick={handleClose}>
               Close
             </button>
