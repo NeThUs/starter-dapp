@@ -44,7 +44,6 @@ const MyDelegation = () => {
       .catch(e => console.error('getClaimableRewards error', e));
     getTotalCumulatedRewardsForUser(dapp, address, delegationContract)
       .then(value => {
-        console.log(value.returnData[0]?.asBigInt.toString());
         setCumulatedRewards(
           denominate({
             denomination,
