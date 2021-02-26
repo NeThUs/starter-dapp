@@ -1,7 +1,7 @@
 import { object, string, boolean, InferType } from 'yup';
 import { DelegationContractType } from './helpers/types';
 
-export const decimals: number = 2;
+export const decimals: number = 18;
 export const denomination: number = 18;
 export const genesisTokenSuply: number = 20000000;
 export const yearSettings = [
