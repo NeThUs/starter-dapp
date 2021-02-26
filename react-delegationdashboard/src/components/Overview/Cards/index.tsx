@@ -120,26 +120,47 @@ const Views = () => {
           })
         )}% of total stake`}
       />
-      {contractOverview.maxDelegationCap !== '0' && contractOverview.maxDelegationCap !== '' && (
-        <StatCard
-          title="Delegation Cap"
-          value={contractOverview.maxDelegationCap || ''}
-          valueUnit={egldLabel}
-          color="green"
-          svg="delegation.svg"
-          percentage={`${getPercentage(
-            denominate({
-              input: totalActiveStake,
-              denomination,
-              decimals,
-              showLastNonZeroDecimal: false,
-            }),
-            contractOverview.maxDelegationCap
-          )}% filled`}
-        >
-          {location.pathname === '/owner' && <UpdateDelegationCapAction />}
-        </StatCard>
-      )}
+      {(isAdmin() && location.pathname === '/owner' ? (
+          <StatCard
+            title="Delegation Cap"
+            value={contractOverview.maxDelegationCap || ''}
+            valueUnit={egldLabel}
+            color="green"
+            svg="delegation.svg"
+            percentage={`${getPercentage(
+              denominate({
+                input: totalActiveStake,
+                denomination,
+                decimals,
+                showLastNonZeroDecimal: false,
+              }),
+              contractOverview.maxDelegationCap
+            )}% filled`}
+          >
+            <UpdateDelegationCapAction />
+          </StatCard>
+        ) : (
+          contractOverview.maxDelegationCap !== '0' &&
+          contractOverview.maxDelegationCap !== '' && (
+            <StatCard
+              title="Delegation Cap"
+              value={contractOverview.maxDelegationCap || ''}
+              valueUnit={egldLabel}
+              color="green"
+              svg="delegation.svg"
+              percentage={`${getPercentage(
+                denominate({
+                  input: totalActiveStake,
+                  denomination,
+                  decimals,
+                  showLastNonZeroDecimal: false,
+                }),
+                contractOverview.maxDelegationCap
+              )}% filled`}
+            ></StatCard>
+          )
+        ))}
+
       {isAdmin() && location.pathname === '/owner' && (
         <StatCard
           title="Automatic activation"
