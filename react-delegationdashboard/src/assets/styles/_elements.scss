@@ -2,13 +2,6 @@ body.modal-open .layout {
   filter: blur(6px);
 }
 
-.opacity-6 {
-  opacity: 0.6;
-}
-.opacity-5 {
-  opacity: 0.5;
-}
-
 .card {
   .card-header {
     &:first-child {
@@ -16,12 +9,13 @@ body.modal-open .layout {
     }
   }
   .divider {
-    width: 50%;
+    width: 57%;
     border-top: 1px solid white !important;
   }
   .title {
     color: #fadb00;
   }
+  border: 2px solid rgba(1, 255,227,1) !important;
   box-shadow: rgba(255, 255, 255, 0.2) 0 0 0 0.5px inset;
 }
 .btn {

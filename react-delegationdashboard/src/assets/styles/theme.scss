@@ -30,7 +30,7 @@ $card-bg: #0c1f33;
 $text-muted: $muted;
 $brand-color: $white;
 $logo-height: 1.5rem;
-$bg-image:  #071e35;
+$bg-image:  #07182b;
 $footer-color: $white;
 
 $lead-font-size: 1.15rem;
@@ -42,8 +42,8 @@ $statcard-value-size: 1.5rem;
 $statcard-subvalue-size: 0.6rem;
 
 // BORDER
-$border-radius: 0.65rem;
-$border-color: lighten($muted, 10%);
+$border-radius: 1rem;
+$border-color: darken($dark, 40%);
 
 // INPUT
 $input-border-radius: 0.2rem;
@@ -64,7 +64,7 @@ $table-border-color: rgba(255, 255, 255, 0.3);
 // CARD
 $card-border-color: rgba(0, 0, 0, 0.4);
 $card-cap-bg: none;
-$card-border-radius: 0.65rem;
+$card-border-radius:  0.65rem;
 
 // MODAL
 $modal-content-bg: rgba(25, 24, 63, 0.98) none repeat scroll 0% 0%;
