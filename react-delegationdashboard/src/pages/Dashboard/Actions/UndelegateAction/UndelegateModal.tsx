@@ -112,7 +112,7 @@ const UndelegateModal = ({
                     </div>
                     {!(errors.amount && touched.amount) && (
                       <small className="form-text">
-                        Available: <Denominate value={balance as string} />
+                        Available: <Denominate value={balance as string} decimals={18}/>
                       </small>
                     )}
                   </div>

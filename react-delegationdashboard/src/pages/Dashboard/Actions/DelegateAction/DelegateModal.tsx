@@ -128,7 +128,7 @@ const DelegateModal = ({ show, balance, handleClose, handleContinue }: DelegateM
                       </div>
                       {!(errors.amount && touched.amount) && (
                         <small className="form-text">
-                          Available: <Denominate value={balance} />
+                          Available: <Denominate value={balance} decimals={18} />
                         </small>
                       )}
                     </div>

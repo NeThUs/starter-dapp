@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Address } from '@elrondnetwork/erdjs/out';
 import { useContext, useDispatch } from '../../../context';
-import { denomination } from 'config';
+import { denomination, decimals } from 'config';
 import { getItem } from 'storage/session';
 import denominate from 'components/Denominate/formatters';
 
@@ -30,7 +30,7 @@ const Header = () => {
 
   const balance = denominate({
     denomination,
-    decimals: 4,
+    decimals,
     input: account.balance,
     showLastNonZeroDecimal: false,
   });

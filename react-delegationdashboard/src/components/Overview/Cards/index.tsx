@@ -99,7 +99,7 @@ const Views = () => {
         value={denominate({
           input: totalActiveStake,
           denomination,
-          decimals,
+          decimals: 6,
           showLastNonZeroDecimal: false,
         })}
         valueUnit={egldLabel}
