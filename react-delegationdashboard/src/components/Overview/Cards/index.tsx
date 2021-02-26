@@ -120,7 +120,28 @@ const Views = () => {
           })
         )}% of total stake`}
       />
-      {(isAdmin() && location.pathname === '/owner' ? (
+      {isAdmin() && location.pathname === '/owner' ? (
+        <StatCard
+          title="Delegation Cap"
+          value={contractOverview.maxDelegationCap || ''}
+          valueUnit={egldLabel}
+          color="green"
+          svg="delegation.svg"
+          percentage={`${getPercentage(
+            denominate({
+              input: totalActiveStake,
+              denomination,
+              decimals,
+              showLastNonZeroDecimal: false,
+            }),
+            contractOverview.maxDelegationCap
+          )}% filled`}
+        >
+          <UpdateDelegationCapAction />
+        </StatCard>
+      ) : (
+        contractOverview.maxDelegationCap !== '0' &&
+        contractOverview.maxDelegationCap !== '' && (
           <StatCard
             title="Delegation Cap"
             value={contractOverview.maxDelegationCap || ''}
@@ -136,30 +157,9 @@ const Views = () => {
               }),
               contractOverview.maxDelegationCap
             )}% filled`}
-          >
-            <UpdateDelegationCapAction />
-          </StatCard>
-        ) : (
-          contractOverview.maxDelegationCap !== '0' &&
-          contractOverview.maxDelegationCap !== '' && (
-            <StatCard
-              title="Delegation Cap"
-              value={contractOverview.maxDelegationCap || ''}
-              valueUnit={egldLabel}
-              color="green"
-              svg="delegation.svg"
-              percentage={`${getPercentage(
-                denominate({
-                  input: totalActiveStake,
-                  denomination,
-                  decimals,
-                  showLastNonZeroDecimal: false,
-                }),
-                contractOverview.maxDelegationCap
-              )}% filled`}
-            ></StatCard>
-          )
-        ))}
+          ></StatCard>
+        )
+      )}
 
       {isAdmin() && location.pathname === '/owner' && (
         <StatCard
