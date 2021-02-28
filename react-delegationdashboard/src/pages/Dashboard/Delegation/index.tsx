@@ -119,7 +119,7 @@ const MyDelegation = () => {
                     value={`${claimableRewards} ${egldLabel}`}
                     color="orange"
                     svg="save-money.svg"
-                    percentage={'This amount can be claimed or re-delegated'}
+                    percentage={'This amount can be claimed or redelegated'}
                   />
                   <StatCard
                     title="Cumulated rewards"

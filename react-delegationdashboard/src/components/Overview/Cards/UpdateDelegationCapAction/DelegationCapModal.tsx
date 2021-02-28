@@ -48,7 +48,7 @@ const DelegationCapModal = ({
                   `Minimum ${denominate({
                     input: totalActiveStake,
                     denomination,
-                    decimals,
+                    decimals: 18,
                     showLastNonZeroDecimal: false,
                     addCommas: false,
                   })} ${egldLabel} or 0 ${egldLabel}`,
@@ -58,12 +58,12 @@ const DelegationCapModal = ({
                       denominate({
                         input: totalActiveStake,
                         denomination,
-                        decimals,
+                        decimals: 18,
                         showLastNonZeroDecimal: false,
                         addCommas: false,
                       })
                     );
-                    return comparationResult >= 0 || bnAmount.comparedTo(0) == 0;
+                    return comparationResult > 0 || bnAmount.comparedTo(0) == 0;
                   }
                 ),
             })}
