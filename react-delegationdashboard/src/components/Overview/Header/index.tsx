@@ -5,6 +5,7 @@ import { useContext, useDispatch } from '../../../context';
 import { denomination, decimals } from 'config';
 import { getItem } from 'storage/session';
 import denominate from 'components/Denominate/formatters';
+import SetAgencyMetaDataModal from './SetAgencyMetaDataModal';
 
 const Header = () => {
   const { pathname } = useLocation();
@@ -59,10 +60,12 @@ const Header = () => {
             </Link>
           ) : null}
           {pathname !== '/dashboard' ? (
-            <Link to="/dashboard" className="btn btn-primary btn-sm">
+            <Link to="/dashboard" className="btn btn-primary btn-sm ml-3">
               Dashboard
             </Link>
           ) : null}
+
+          {isAdmin() && pathname == '/owner' ? <SetAgencyMetaDataModal /> : null}
           {loggedIn && (
             <a href="/#" onClick={logOut} id="closeButton" className="btn btn-primary btn-sm ml-3">
               Exit
