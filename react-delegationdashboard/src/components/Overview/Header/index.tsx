@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Address } from '@elrondnetwork/erdjs/out';
-import { useContext, useDispatch } from '../../../context';
+import { useContext, useDispatch } from 'context';
 import { denomination, decimals } from 'config';
 import { getItem } from 'storage/session';
 import denominate from 'components/Denominate/formatters';
