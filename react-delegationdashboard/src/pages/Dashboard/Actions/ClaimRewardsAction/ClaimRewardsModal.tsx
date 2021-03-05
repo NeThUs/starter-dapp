@@ -2,6 +2,8 @@ import React from 'react';
 import { Modal } from 'react-bootstrap';
 import ViewStatAction from 'components/ViewStatAction';
 import { useDelegation } from 'helpers';
+import { useContext } from 'context';
+import BigNumber from 'bignumber.js';
 export interface ClaimRewardsModalType {
   show: boolean;
   title: string;
@@ -10,11 +12,24 @@ export interface ClaimRewardsModalType {
 }
 const ClaimRewardsModal = ({ show, title, description, handleClose }: ClaimRewardsModalType) => {
   const { delegation } = useDelegation();
+  const { totalActiveStake, contractOverview } = useContext();
   const handleClaimRewards = () => {
     delegation
       .sendTransaction('0', 'claimRewards')
       .then()
       .catch(e => console.error('handleClaimRewards error', e));
+  };
+
+  const isRedelegateEnable = () => {
+    const bnTotalActiveStake = new BigNumber(totalActiveStake);
+    const bnMaxDelegationCap = new BigNumber(contractOverview.maxDelegationCap);
+    if (
+      bnTotalActiveStake.comparedTo(bnMaxDelegationCap) >= 0 &&
+      contractOverview.reDelegationCap !== 'true'
+    ) {
+      return false;
+    }
+    return true;
   };
 
   const handleRedelegateRewards = () => {
@@ -31,23 +46,23 @@ const ClaimRewardsModal = ({ show, title, description, handleClose }: ClaimRewar
             {title}
           </p>
           <p className="mb-spacer">{description}</p>
-          <div className="d-row justify-content-center align-items-center flex-wrap">
-            <div className="d-flex justify-content-center align-items-center flex-wrap">
-              <ViewStatAction
-                actionTitle="Claim"
-                handleContinue={handleClaimRewards}
-                color="primary"
-              />
+          <div className="d-flex justify-content-center align-items-center flex-wrap">
+            <ViewStatAction
+              actionTitle="Claim"
+              handleContinue={handleClaimRewards}
+              color="primary"
+            />
+            {isRedelegateEnable() && (
               <ViewStatAction
                 actionTitle="Redelegate"
                 handleContinue={handleRedelegateRewards}
                 color="orange"
               />
-            </div>
-            <button id="closeButton" className="btn btn-link mt-spacer mx-2" onClick={handleClose}>
-              Close
-            </button>
+            )}
           </div>
+          <button id="closeButton" className="btn btn-link mt-spacer mx-2" onClick={handleClose}>
+            Close
+          </button>
         </div>
       </div>
     </Modal>

@@ -59,43 +59,6 @@ const Views = () => {
   return (
     <div className="cards d-flex flex-wrap mr-spacer">
       <StatCard
-        title="Number of Users"
-        value={numUsers.toString()}
-        color="orange"
-        svg="user.svg"
-        percentage={'Active users!'}
-      />
-      <StatCard
-        title="Number of Nodes"
-        value={numberOfActiveNodes}
-        valueUnit=""
-        color="purple"
-        svg="nodes.svg"
-        percentage={`${getPercentage(
-          numberOfActiveNodes,
-          networkStake.TotalValidators.toString()
-        )}% of total nodes`}
-      />
-      <StatCard
-        title="Agency APR"
-        value={aprPercentageAfterFee}
-        valueUnit="%"
-        color="orange"
-        svg="leaf-solid.svg"
-        percentage="Annual percentage"
-        tooltipText="This is an aproximate APR calculation for this year based on the current epoch excluding the service fee"
-      />
-      <StatCard
-        title="Service Fee"
-        value={contractOverview.serviceFee || ''}
-        valueUnit="%"
-        color="red"
-        svg="service.svg"
-        percentage={'Agency fee per year'}
-      >
-        {location.pathname === '/owner' && <SetPercentageFeeAction />}
-      </StatCard>
-      <StatCard
         title="Contract Stake"
         value={denominate({
           input: totalActiveStake,
@@ -121,10 +84,47 @@ const Views = () => {
           })
         )}% of total stake`}
       />
+      <StatCard title="Number of Users" value={numUsers.toString()} color="orange" svg="user.svg" />
+      <StatCard
+        title="Number of Nodes"
+        value={numberOfActiveNodes}
+        valueUnit=""
+        color="purple"
+        svg="nodes.svg"
+        percentage={`${getPercentage(
+          numberOfActiveNodes,
+          networkStake.TotalValidators.toString()
+        )}% of total nodes`}
+      />
+      <StatCard
+        title="Computed APR"
+        value={aprPercentageAfterFee}
+        valueUnit=""
+        color="orange"
+        svg="leaf-solid.svg"
+        percentage="Annual percentage rate"
+        tooltipText="This is an aproximate APR calculation for this year based on the current epoch"
+      />
+      <StatCard
+        title="Service Fee"
+        value={contractOverview.serviceFee || ''}
+        valueUnit="%"
+        color="red"
+        svg="service.svg"
+      >
+        {location.pathname === '/owner' && <SetPercentageFeeAction />}
+      </StatCard>
       {isAdmin() && location.pathname === '/owner' ? (
         <StatCard
           title="Delegation Cap"
-          value={contractOverview.maxDelegationCap || ''}
+          value={
+            denominate({
+              decimals,
+              denomination,
+              input: contractOverview.maxDelegationCap,
+              showLastNonZeroDecimal: false,
+            }) || ''
+          }
           valueUnit={egldLabel}
           color="green"
           svg="delegation.svg"
@@ -135,17 +135,39 @@ const Views = () => {
               decimals,
               showLastNonZeroDecimal: false,
             }),
-            contractOverview.maxDelegationCap
+            denominate({
+              decimals,
+              denomination,
+              input: contractOverview.maxDelegationCap,
+              showLastNonZeroDecimal: false,
+            })
           )}% filled`}
         >
           <UpdateDelegationCapAction />
         </StatCard>
       ) : (
-        contractOverview.maxDelegationCap !== '0' &&
-        contractOverview.maxDelegationCap !== '' && (
+        denominate({
+          decimals,
+          denomination,
+          input: contractOverview.maxDelegationCap,
+          showLastNonZeroDecimal: false,
+        }) !== '0' &&
+        denominate({
+          decimals,
+          denomination,
+          input: contractOverview.maxDelegationCap,
+          showLastNonZeroDecimal: false,
+        }) !== '' && (
           <StatCard
             title="Delegation Cap"
-            value={contractOverview.maxDelegationCap || ''}
+            value={
+              denominate({
+                decimals,
+                denomination,
+                input: contractOverview.maxDelegationCap,
+                showLastNonZeroDecimal: false,
+              }) || ''
+            }
             valueUnit={egldLabel}
             color="green"
             svg="delegation.svg"
@@ -156,7 +178,12 @@ const Views = () => {
                 decimals,
                 showLastNonZeroDecimal: false,
               }),
-              contractOverview.maxDelegationCap
+              denominate({
+                decimals,
+                denomination,
+                input: contractOverview.maxDelegationCap,
+                showLastNonZeroDecimal: false,
+              })
             )}% filled`}
           ></StatCard>
         )
