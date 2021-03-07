@@ -90,23 +90,21 @@ const MyDelegation = () => {
           <div className="card-body p-spacer">
             <div className="d-flex flex-wrap align-items-center justify-content-between">
               <p className="h6 mb-3">Dashboard</p>
-              {userActiveStake !== String(0) && (
-                <div className="d-flex flex-wrap justify-content-between align-items-center">
-                  <DelegateAction />
-                  {displayUndelegate && <UndelegateAction balance={userActiveNominatedStake} />}
-                  {displayRewards && <ClaimRewardsAction />}
-                </div>
-              )}
+              <div className="d-flex flex-wrap justify-content-between align-items-center">
+                {userActiveStake !== String(0) && <DelegateAction />}
+                {displayUndelegate && <UndelegateAction balance={userActiveNominatedStake} />}
+                {displayRewards && <ClaimRewardsAction />}
+              </div>
             </div>
-            {userActiveStake === String(0) ? (
-              <State
-                title="No Stake Yet"
-                description="Welcome to our platform!"
-                action={<DelegateAction />}
-              />
-            ) : (
-              <div className="m-auto text-center py-spacer">
-                <div className="cards d-flex flex-wrap mr-spacer">
+            <div className="m-auto text-center py-spacer">
+              <div className="cards d-flex flex-wrap mr-spacer">
+                {userActiveStake === String(0) ? (
+                  <State
+                    title="No Stake Yet"
+                    description="Welcome to our platform!"
+                    action={<DelegateAction />}
+                  />
+                ) : (
                   <StatCard
                     title="Active Delegation"
                     value={`${userActiveStake} ${egldLabel}`}
@@ -114,6 +112,8 @@ const MyDelegation = () => {
                     svg="money-bag.svg"
                     percentage={''}
                   />
+                )}
+                {displayRewards && (
                   <StatCard
                     title="Claimable rewards"
                     value={`${claimableRewards} ${egldLabel}`}
@@ -121,6 +121,8 @@ const MyDelegation = () => {
                     svg="save-money.svg"
                     percentage={'This amount can be claimed or redelegated'}
                   />
+                )}
+                {cumulatedRewards && (
                   <StatCard
                     title="Cumulated rewards"
                     value={`${cumulatedRewards} ${egldLabel}`}
@@ -128,9 +130,9 @@ const MyDelegation = () => {
                     svg="dollar.svg"
                     percentage={'This is the total reward you ever received!'}
                   />
-                </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       )}
