@@ -57,7 +57,7 @@ const Views = () => {
   }, []);
 
   return (
-    <div className="cards d-flex flex-wrap mr-spacer">
+    <div className="cards d-flex flex-wrap">
       <StatCard
         title="Contract Stake"
         value={denominate({

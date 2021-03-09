@@ -6,6 +6,7 @@ import State from 'components/State';
 import { useContext } from 'context';
 import WalletLogin from './Login/Wallet';
 import Views from 'components/Overview/Cards';
+import { Calculator } from 'components/Calculator';
 
 const Home = () => {
   const { loading, error, loggedIn, egldLabel, aprPercentageAfterFee} = useContext();
@@ -14,6 +15,7 @@ const Home = () => {
 
   return (
     <div ref={ref} className="home d-row flex-fill align-items-center">
+      <Calculator />
       {error ? (
         <State
           icon={faBan}
