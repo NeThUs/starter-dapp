@@ -27,6 +27,7 @@ export interface StateType {
   loggedIn: boolean;
   address: string;
   egldLabel: string;
+  USD: number;
   denomination: number;
   decimals: number;
   account: AccountType;
@@ -85,6 +86,7 @@ export const initialState = () => {
       ),
     },
     loading: false,
+    USD: 0,
     error: '',
     loggedIn: !!getItem('logged_in'),
     address: getItem('address'),

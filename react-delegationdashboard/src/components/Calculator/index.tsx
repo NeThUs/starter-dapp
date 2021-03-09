@@ -7,7 +7,7 @@ import nominate from 'helpers/nominate';
 import StatCard from 'components/StatCard';
 
 export const Calculator = () => {
-  const { egldLabel, aprPercentageAfterFee } = useContext();
+  const { egldLabel, aprPercentageAfterFee, USD } = useContext();
   const [daily, setDaily] = useState('0');
   const [weekly, setWeekly] = useState('0');
   const [monthly, setMonthly] = useState('0');
@@ -49,29 +49,32 @@ export const Calculator = () => {
       value: yearly,
     },
   ];
-  
+
   if (aprPercentageAfterFee == '...') {
     return null;
   }
 
   return (
-    <div className="text-center">
-      <div className="cards d-flex flex-wrap text-center">
+    <div>
+      <div className="cards d-flex flex-wrap">
         {cards.map(({ label, value }, index) => (
           <StatCard
             key={index}
             title={label}
             valueUnit={egldLabel}
+            svg="save-money.svg"
             color="orange"
+            percentage={`$ ${(parseFloat(value) * USD).toFixed(2)}`}
             value={value.toString()}
           />
         ))}
       </div>
-      <div className="form-group text-center" style={{marginLeft: '27%', marginRight: '27%'}}>
+      <div className="form-group text-center" style={{ marginLeft: '27%', marginRight: '27%' }}>
         <label htmlFor="amount">How many {egldLabel} do you want to stake ?</label>
         <input
           type="number"
           className="form-control"
+          style={{textAlign: 'center'}}
           id="amount"
           min="10"
           step="any"

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StateType, initialState } from './state';
 import { DispatchType, reducer } from './reducer';
+import axios from 'axios';
 
 export interface ContextType {
   children: React.ReactNode;
@@ -11,6 +12,26 @@ const Dispatch = React.createContext<DispatchType | undefined>(undefined);
 
 function ContextProvider({ children }: ContextType) {
   const [state, dispatch] = React.useReducer(reducer, initialState());
+  const [interval, setInt] = useState<NodeJS.Timeout | undefined>(undefined);
+
+  const getLatestElrondData = async () => {
+    await axios.get('https://testnet-api.elrond.com/quotes/latest')
+    .then(res => {
+      dispatch({type: 'setUSD', USD: res.data.usd});
+    });
+  };
+
+  useEffect(() => {
+    const fetch = async () => {
+      await getLatestElrondData();
+    };
+    setInt(setInterval(async () => {await fetch();}, 20000));
+    fetch();
+    return () => {
+      clearInterval(interval as NodeJS.Timeout);
+    };
+  }, []);
+
   return (
     <Context.Provider value={state}>
       <Dispatch.Provider value={dispatch}>{children}</Dispatch.Provider>
