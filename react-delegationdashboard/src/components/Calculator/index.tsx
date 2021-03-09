@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useContext } from 'context';
-import { isMobile } from 'react-device-detect';
-import { denomination, decimals } from 'config';
-import denominate from 'components/Denominate/formatters';
-import nominate from 'helpers/nominate';
 import StatCard from 'components/StatCard';
 
-export const Calculator = () => {
+interface Balance {
+  balance?: number
+  input?: boolean
+}
+export const Calculator = ({balance = 50, input = true}: Balance) => {
   const { egldLabel, aprPercentageAfterFee, USD } = useContext();
   const [daily, setDaily] = useState('0');
   const [weekly, setWeekly] = useState('0');
   const [monthly, setMonthly] = useState('0');
   const [yearly, setYearly] = useState('0');
-  const [value, setValue] = useState(50);
+  const [value, setValue] = useState(balance);
 
   const getReward = (value: number) => {
     setValue(value);
   };
+
   useEffect(() => {
     setYearly((value * (parseFloat(aprPercentageAfterFee) / 100)).toFixed(4));
     setMonthly((parseFloat(yearly) / 12).toFixed(4));
@@ -69,7 +70,7 @@ export const Calculator = () => {
           />
         ))}
       </div>
-      <div className="form-group text-center" style={{ marginLeft: '27%', marginRight: '27%' }}>
+      {input && <div className="form-group text-center" style={{ marginLeft: '27%', marginRight: '27%' }}>
         <label htmlFor="amount">How many {egldLabel} do you want to stake ?</label>
         <input
           type="number"
@@ -82,7 +83,7 @@ export const Calculator = () => {
           autoComplete="off"
           onChange={e => getReward(parseFloat(e.target.value))}
         />
-      </div>
+      </div>}
     </div>
   );
 };

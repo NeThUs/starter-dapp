@@ -9,6 +9,7 @@ import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import State from 'components/State';
 import { denomination, decimals } from 'config';
 import StatCard from 'components/StatCard';
+import { Calculator } from 'components/Calculator';
 
 const MyDelegation = () => {
   const { dapp, address, egldLabel, delegationContract, loading } = useContext();
@@ -44,7 +45,7 @@ const MyDelegation = () => {
       })
       .catch(e => console.error('getClaimableRewards error', e));
     getTotalCumulatedRewardsForUser(dapp, address, delegationContract)
-      .then(value => {  
+      .then(value => {
         if (value.returnData.length > 0 && value.returnData[0]?.asNumber !== 0) {
           setDisplayCumulatedRewards(true);
         }
@@ -136,6 +137,7 @@ const MyDelegation = () => {
                   />
                 )}
               </div>
+              <Calculator balance={parseFloat(userActiveStake)} input={false} />
             </div>
           </div>
         </div>
