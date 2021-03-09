@@ -23,6 +23,7 @@ const MyDelegation = () => {
   const [claimableRewards, setClaimableRewards] = React.useState('0');
   const [cumulatedRewards, setCumulatedRewards] = React.useState('0');
   const [displayRewards, setDisplayRewards] = React.useState(false);
+  const [displayCumulatedRewards, setDisplayCumulatedRewards] = React.useState(false);
   const [displayUndelegate, setDisplayUndelegate] = React.useState(false);
 
   const getAllData = () => {
@@ -43,7 +44,10 @@ const MyDelegation = () => {
       })
       .catch(e => console.error('getClaimableRewards error', e));
     getTotalCumulatedRewardsForUser(dapp, address, delegationContract)
-      .then(value => {
+      .then(value => {  
+        if (value.returnData.length > 0 && value.returnData[0]?.asNumber !== 0) {
+          setDisplayCumulatedRewards(true);
+        }
         setCumulatedRewards(
           denominate({
             denomination,
@@ -122,7 +126,7 @@ const MyDelegation = () => {
                     percentage={'This amount can be claimed or redelegated'}
                   />
                 )}
-                {cumulatedRewards && (
+                {displayCumulatedRewards && (
                   <StatCard
                     title="Cumulated rewards"
                     value={`${cumulatedRewards} ${egldLabel}`}
