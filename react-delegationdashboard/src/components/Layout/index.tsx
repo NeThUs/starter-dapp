@@ -118,6 +118,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             blsKeys: blsKeys,
             totalActiveStake: activeStake.asBigInt.toString(),
           });
+          console.log(APR);
           dispatch({
             type: 'setAprPercentage',
             aprPercentage: APR,

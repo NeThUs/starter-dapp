@@ -42,7 +42,7 @@ const Home = () => {
           </div>
         </div>
       )}
-      <Views />
+      {/* <Views /> */}
     </div>
   );
 };

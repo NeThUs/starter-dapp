@@ -58,10 +58,13 @@ const WalletLogin = () => {
   }, [dapp.provider, dapp.proxy, dispatch]);
 
   return (
-    <button onClick={handleOnClick} className="btn btn-primary px-sm-spacer mx-1 mx-sm-3">
-      Login
-    </button>
+    <p>We will start on 22nd March</p>
   );
+  // return (
+  //   <button onClick={handleOnClick} className="btn btn-primary px-sm-spacer mx-1 mx-sm-3">
+  //     Login
+  //   </button>
+  // );
 };
 
 export default WalletLogin;
