@@ -137,7 +137,7 @@ const MyDelegation = () => {
                   />
                 )}
               </div>
-              <Calculator balance={parseFloat(userActiveStake)} input={false} />
+              {displayUndelegate && <Calculator balance={parseFloat(userActiveStake.replace(',', ''))} input={false} />}
             </div>
           </div>
         </div>
