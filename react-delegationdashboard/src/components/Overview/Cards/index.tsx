@@ -77,7 +77,7 @@ const Views = () => {
             showLastNonZeroDecimal: false,
           }),
           denominate({
-            input: networkStake.TotalStaked.toString(),
+            input: networkStake.TotalStaked.toFixed(),
             denomination,
             decimals,
             showLastNonZeroDecimal: false,

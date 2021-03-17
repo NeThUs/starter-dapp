@@ -38,7 +38,7 @@ const MyDelegation = () => {
           denominate({
             denomination,
             decimals,
-            input: value.returnData[0]?.asBigInt.toString(),
+            input: value.returnData[0]?.asBigInt.toFixed(),
             showLastNonZeroDecimal: false,
           }) || ''
         );
@@ -65,11 +65,11 @@ const MyDelegation = () => {
           denominate({
             denomination,
             decimals,
-            input: value.returnData[0]?.asBigInt.toString(),
+            input: value.returnData[0]?.asBigInt.toFixed(),
             showLastNonZeroDecimal: false,
           }) || ''
         );
-        setUserActiveNominatedStake(value.returnData[0]?.asBigInt.toString());
+        setUserActiveNominatedStake(value.returnData[0]?.asBigInt.toFixed());
         if (value.returnData.length > 0 && value.returnData[0]?.asNumber !== 0) {
           setDisplayUndelegate(true);
         }
