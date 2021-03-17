@@ -36,7 +36,7 @@ const Home = () => {
               <h4 className="title">Delegation Manager</h4>
               <hr className="divider"/>
               <div>
-                <p>Just for testing! We will start on 22nd March</p>
+                <p>Just for testing! We will start on 26nd March after 15:00 UTC</p>
                 <WalletLogin />
               </div>
             </div>

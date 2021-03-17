@@ -124,7 +124,6 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             blsKeys: blsKeys,
             totalActiveStake: activeStake.asBigInt.toFixed(),
           });
-          console.log(APR);
           dispatch({
             type: 'setNetworkConfig',
             networkConfig: new NetworkConfig(

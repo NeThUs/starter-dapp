@@ -75,7 +75,6 @@ const calculateAPR = ({
   const validatorBaseReward = (validatorBaseStake / networkBaseStake) * baseReward;
   const anualPercentageRate =
     (epochsInYear * (validatorTopUpReward + validatorBaseReward)) / validatorTotalStake;
-    console.log(anualPercentageRate);
   return (anualPercentageRate * 100).toFixed(2);
 };
 
