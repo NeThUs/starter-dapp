@@ -30,14 +30,16 @@ const UndelegateModal = ({
   const UndelegateSchema = object().shape({
     amount: string()
       .required('Required')
-      .test('minimum', `Minimum 1 ${egldLabel}`, (value) => {
+      .test('minimum', `Minimum 1 ${egldLabel}`, value => {
         const bnAmount = new BigNumber(value !== undefined ? value : '');
         return bnAmount.comparedTo(1) >= 0;
       })
-      .test('dustLeft', `You can not keep under 1 ${egldLabel}. Use the Max option.`, (value) => {
+      .test('dustLeft', `You can not keep under 1 ${egldLabel}. Use the Max option.`, value => {
         const bnAmount = new BigNumber(value !== undefined ? value : '');
         const bnAvailable = new BigNumber(available);
-        return (bnAvailable.minus(bnAmount)).comparedTo(1) >= 0 || bnAvailable.comparedTo(bnAmount) == 0;
+        return (
+          bnAvailable.minus(bnAmount).comparedTo(1) >= 0 || bnAvailable.comparedTo(bnAmount) == 0
+        );
       }),
   });
   return (
@@ -52,12 +54,12 @@ const UndelegateModal = ({
             initialValues={{
               amount: '1',
             }}
-            onSubmit={(values) => {
+            onSubmit={values => {
               handleContinue(values.amount.toString());
             }}
             validationSchema={UndelegateSchema}
           >
-            {(props) => {
+            {props => {
               const {
                 handleSubmit,
                 values,
