@@ -1,23 +1,8 @@
-import {
-  ContractFunction,
-  TransactionPayload,
-  GasLimit,
-  Address,
-  SmartContract,
-} from '@elrondnetwork/erdjs';
-import { ProxyProvider, BigVal } from 'elrondjs';
+import { ContractFunction, TransactionPayload, GasLimit } from '@elrondnetwork/erdjs';
+import { ProxyProvider as PRX, BigVal } from 'elrondjs';
 import { delegationContractData, network } from '../config';
 
 export default class Delegation {
-  contract: SmartContract;
-  proxyProvider: ProxyProvider;
-
-  constructor(delegationContract?: string) {
-    const address = new Address(delegationContract);
-    this.contract = new SmartContract({ address });
-    this.proxyProvider = new ProxyProvider(network.gatewayAddress!);
-  }
-
   async sendTransaction(
     value: string,
     transcationType: string,
@@ -52,13 +37,14 @@ export default class Delegation {
         data: payload.valueOf().toString(),
       };
 
-      window.erdbox.setProvider(this.proxyProvider);
       try {
+        const proxyProvider = new PRX(network.gatewayAddress as string);
+        window.erdbox.setProvider(proxyProvider);
         const sign = await window.erdbox.getSigner();
         const signedTransaction = await sign.signTransaction(tx);
         console.log(signedTransaction);
-        const hash = await this.proxyProvider.sendSignedTransaction(signedTransaction);
-        await this.proxyProvider.waitForTransaction(hash);
+        const hash = await proxyProvider.sendSignedTransaction(signedTransaction);
+        await proxyProvider.waitForTransaction(hash);
       } catch (error) {
         console.log(error);
       }
