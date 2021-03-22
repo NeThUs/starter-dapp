@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import ViewStatAction from 'components/ViewStatAction';
 import { useDelegation } from 'helpers';
 import { useContext } from 'context';
 import BigNumber from 'bignumber.js';
+import State from 'components/State';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 export interface ClaimRewardsModalType {
   show: boolean;
   title: string;
@@ -13,11 +15,17 @@ export interface ClaimRewardsModalType {
 const ClaimRewardsModal = ({ show, title, description, handleClose }: ClaimRewardsModalType) => {
   const { delegation } = useDelegation();
   const { totalActiveStake, contractOverview } = useContext();
-  const handleClaimRewards = () => {
-    delegation
-      .sendTransaction('0', 'claimRewards')
-      .then()
-      .catch(e => console.error('handleClaimRewards error', e));
+  const [loadingModal, setLoadingModal] = useState(false);
+  const handleClaimRewards = async () => {
+    try {
+      setLoadingModal(true);
+      await delegation.sendTransaction('0', 'claimRewards');
+    } catch (error) {
+      console.error('handleClaimRewards ', error);
+    } finally {
+      setLoadingModal(false);
+      handleClose();
+    }
   };
 
   const isRedelegateEnable = () => {
@@ -32,39 +40,47 @@ const ClaimRewardsModal = ({ show, title, description, handleClose }: ClaimRewar
     return true;
   };
 
-  const handleRedelegateRewards = () => {
-    delegation
-      .sendTransaction('0', 'reDelegateRewards')
-      .then()
-      .catch(e => console.error('handleRedelegateRewards error', e));
+  const handleRedelegateRewards = async () => {
+    try {
+      setLoadingModal(true);
+      await delegation.sendTransaction('0', 'reDelegateRewards');
+    } catch (error) {
+      console.error('handleRedelegateRewards ', error);
+    } finally {
+      setLoadingModal(false);
+      handleClose();
+    }
   };
   return (
     <Modal show={show} onHide={handleClose} className="modal-container" animation={false} centered>
-      <div className="card">
-        <div className="card-body p-spacer text-center">
-          <p className="h6 mb-spacer" data-testid="delegateTitle">
-            {title}
-          </p>
-          <p className="mb-spacer">{description}</p>
-          <div className="d-flex justify-content-center align-items-center flex-wrap">
-            <ViewStatAction
-              actionTitle="Claim"
-              handleContinue={handleClaimRewards}
-              color="primary"
-            />
-            {isRedelegateEnable() && (
+      {!loadingModal && (
+        <div className="card">
+          <div className="card-body p-spacer text-center">
+            <p className="h6 mb-spacer" data-testid="delegateTitle">
+              {title}
+            </p>
+            <p className="mb-spacer">{description}</p>
+            <div className="d-flex justify-content-center align-items-center flex-wrap">
               <ViewStatAction
-                actionTitle="Redelegate"
-                handleContinue={handleRedelegateRewards}
-                color="orange"
+                actionTitle="Claim"
+                handleContinue={handleClaimRewards}
+                color="primary"
               />
-            )}
+              {isRedelegateEnable() && (
+                <ViewStatAction
+                  actionTitle="Redelegate"
+                  handleContinue={handleRedelegateRewards}
+                  color="orange"
+                />
+              )}
+            </div>
+            <button id="closeButton" className="btn btn-link mt-spacer mx-2" onClick={handleClose}>
+              Close
+            </button>
           </div>
-          <button id="closeButton" className="btn btn-link mt-spacer mx-2" onClick={handleClose}>
-            Close
-          </button>
         </div>
-      </div>
+      )}
+      {loadingModal && <State icon={faCircleNotch} iconClass="fa-spin text-primary" />}
     </Modal>
   );
 };

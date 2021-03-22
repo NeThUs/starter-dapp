@@ -1,29 +1,21 @@
 import {
-  ProxyProvider,
   ContractFunction,
-  Transaction,
   TransactionPayload,
-  Balance,
   GasLimit,
-  IDappProvider,
-  WalletProvider,
-  HWProvider,
   Address,
   SmartContract,
 } from '@elrondnetwork/erdjs';
-import { setItem } from '../storage/session';
-import { delegationContractData } from '../config';
+import { ProxyProvider, BigVal } from 'elrondjs';
+import { delegationContractData, network } from '../config';
 
 export default class Delegation {
   contract: SmartContract;
   proxyProvider: ProxyProvider;
-  signerProvider?: IDappProvider;
 
-  constructor(provider: ProxyProvider, delegationContract?: string, signer?: IDappProvider) {
+  constructor(delegationContract?: string) {
     const address = new Address(delegationContract);
     this.contract = new SmartContract({ address });
-    this.proxyProvider = provider;
-    this.signerProvider = signer;
+    this.proxyProvider = new ProxyProvider(network.gatewayAddress!);
   }
 
   async sendTransaction(
@@ -31,24 +23,7 @@ export default class Delegation {
     transcationType: string,
     args: string = ''
   ): Promise<boolean> {
-    if (!this.signerProvider) {
-      throw new Error(
-        'You need a singer to send a transaction, use either WalletProvider or LedgerProvider'
-      );
-    }
-
-    switch (this.signerProvider.constructor) {
-      case WalletProvider:
-        // Can use something like this to handle callback redirect
-        setItem('transaction_identifier', true, 120);
-        return this.sendTransactionBasedOnType(value, transcationType, args);
-      case HWProvider:
-        return this.sendTransactionBasedOnType(value, transcationType, args);
-      default:
-        console.warn('invalid signerProvider');
-    }
-
-    return true;
+    return this.sendTransactionBasedOnType(value, transcationType, args);
   }
 
   private async sendTransactionBasedOnType(
@@ -56,6 +31,7 @@ export default class Delegation {
     transcationType: string,
     args: string = ''
   ): Promise<boolean> {
+    window.scrollTo(0, 0);
     let delegationContract = delegationContractData.find(d => d.name === transcationType);
     if (!delegationContract) {
       throw new Error('The contract for this action in not defined');
@@ -68,15 +44,24 @@ export default class Delegation {
       let payload = TransactionPayload.contractCall()
         .setFunction(func)
         .build();
-      let transaction = new Transaction({
-        receiver: this.contract.getAddress(),
-        value: Balance.eGLD(value),
-        gasLimit: new GasLimit(delegationContract.gasLimit),
-        data: payload,
-      });
 
-      // @ts-ignore
-      await this.signerProvider.sendTransaction(transaction);
+      const tx = {
+        receiver: network.delegationContract,
+        value: new BigVal(value),
+        gasLimit: new GasLimit(delegationContract.gasLimit).valueOf(),
+        data: payload.valueOf().toString(),
+      };
+
+      window.erdbox.setProvider(this.proxyProvider);
+      try {
+        const sign = await window.erdbox.getSigner();
+        const signedTransaction = await sign.signTransaction(tx);
+        console.log(signedTransaction);
+        const hash = await this.proxyProvider.sendSignedTransaction(signedTransaction);
+        await this.proxyProvider.waitForTransaction(hash);
+      } catch (error) {
+        console.log(error);
+      }
 
       return true;
     }

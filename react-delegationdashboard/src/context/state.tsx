@@ -16,7 +16,6 @@ export const defaultNetwork: NetworkType = {
 };
 
 export interface DappState {
-  provider: IDappProvider;
   proxy: ProxyProvider;
   apiProvider: ApiProvider;
 }
@@ -81,7 +80,6 @@ export const initialState = () => {
     denomination: denomination,
     decimals: decimals,
     dapp: {
-      provider: new WalletProvider(sessionNetwork.walletAddress),
       proxy: new ProxyProvider(
         sessionNetwork.gatewayAddress !== undefined
           ? sessionNetwork?.gatewayAddress

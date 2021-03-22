@@ -9,17 +9,22 @@ const DelegateAction = () => {
   const { delegation } = useDelegation();
   const [balance, setBalance] = useState('');
   const [showDelegateModal, setShowDelegateModal] = useState(false);
+  const [loadingModal, setLoadingModal] = useState(false);
+  
   useEffect(() => {
     dapp.proxy.getAccount(new Address(address)).then(value => setBalance(value.balance.toString()));
   }, [address, dapp.proxy]);
 
-  const handleDelegate = (value: string) => {
-    delegation
-      .sendTransaction(value, 'delegate')
-      .then()
-      .catch(e => {
-        console.error('handleDelegate ', e);
-      });
+  const handleDelegate = async (value: string) => {
+    try {
+      setLoadingModal(true);
+      await delegation.sendTransaction(value, 'delegate');
+    } catch (error) {
+      console.error('handleDelegate ', error);
+    } finally {
+      setShowDelegateModal(false);
+      setLoadingModal(false);
+    }
   };
   return (
     <div>
@@ -34,6 +39,7 @@ const DelegateAction = () => {
       <DelegateModal
         show={showDelegateModal}
         balance={balance}
+        loading={loadingModal}
         handleClose={() => {
           setShowDelegateModal(false);
         }}

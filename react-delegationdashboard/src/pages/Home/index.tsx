@@ -9,7 +9,7 @@ import Views from 'components/Overview/Cards';
 import { Calculator } from 'components/Calculator';
 
 const Home = () => {
-  const { loading, error, loggedIn, egldLabel, aprPercentageAfterFee} = useContext();
+  const { loading, error, loggedIn } = useContext();
 
   const ref = React.useRef(null);
 

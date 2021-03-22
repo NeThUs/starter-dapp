@@ -8,9 +8,12 @@ import Denominate from 'components/Denominate';
 import { denomination, decimals } from 'config';
 import { object, string } from 'yup';
 import { ActionModalType } from 'helpers/types';
+import State from 'components/State';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 
 const UndelegateModal = ({
   show,
+  loading,
   title,
   balance,
   description,
@@ -44,99 +47,103 @@ const UndelegateModal = ({
   });
   return (
     <Modal show={show} onHide={handleClose} className="modal-container" animation={false} centered>
-      <div className="card">
-        <div className="card-body p-spacer text-center">
-          <p className="h6 mb-spacer" data-testid="undelegateTitle">
-            {title}
-          </p>
-          <p className="mb-spacer">{description}</p>
-          <Formik
-            initialValues={{
-              amount: '1',
-            }}
-            onSubmit={values => {
-              handleContinue(values.amount.toString());
-            }}
-            validationSchema={UndelegateSchema}
-          >
-            {props => {
-              const {
-                handleSubmit,
-                values,
-                handleBlur,
-                handleChange,
-                setFieldValue,
-                errors,
-                touched,
-              } = props;
+      {!loading && (
+        <div className="card">
+          <div className="card-body p-spacer text-center">
+            <p className="h6 mb-spacer" data-testid="undelegateTitle">
+              {title}
+            </p>
+            <p className="mb-spacer">{description}</p>
+            <Formik
+              initialValues={{
+                amount: '1',
+              }}
+              onSubmit={values => {
+                handleContinue(values.amount.toString());
+              }}
+              validationSchema={UndelegateSchema}
+            >
+              {props => {
+                const {
+                  handleSubmit,
+                  values,
+                  handleBlur,
+                  handleChange,
+                  setFieldValue,
+                  errors,
+                  touched,
+                } = props;
 
-              const getEntireBalance = (e: React.MouseEvent) => {
-                e.preventDefault();
-                if (available !== undefined) {
-                  setFieldValue('amount', available);
-                }
-              };
+                const getEntireBalance = (e: React.MouseEvent) => {
+                  e.preventDefault();
+                  if (available !== undefined) {
+                    setFieldValue('amount', available);
+                  }
+                };
 
-              return (
-                <form onSubmit={handleSubmit} className="text-left">
-                  <div className="form-group mb-spacer">
-                    <label htmlFor="amount">Amount {egldLabel}</label>
-                    <div className="input-group">
-                      <input
-                        type="number"
-                        className={`form-control ${
-                          errors.amount && touched.amount ? 'is-invalid' : ''
-                        }`}
-                        id="amount"
-                        name="amount"
-                        data-testid="amount"
-                        min={1}
-                        step={'any'}
-                        required={true}
-                        value={values.amount}
-                        autoComplete="off"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                      {values.amount !== available && available !== '0' && (
-                        <span className="input-group-append">
-                          <a
-                            href="/#"
-                            className="input-group-text text-dark"
-                            onClick={getEntireBalance}
-                            data-testid="maxBtn"
-                          >
-                            Max
-                          </a>
-                        </span>
+                return (
+                  <form onSubmit={handleSubmit} className="text-left">
+                    <div className="form-group mb-spacer">
+                      <label htmlFor="amount">Amount {egldLabel}</label>
+                      <div className="input-group">
+                        <input
+                          type="number"
+                          className={`form-control ${
+                            errors.amount && touched.amount ? 'is-invalid' : ''
+                          }`}
+                          id="amount"
+                          name="amount"
+                          data-testid="amount"
+                          min={1}
+                          step={'any'}
+                          required={true}
+                          value={values.amount}
+                          autoComplete="off"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                        {values.amount !== available && available !== '0' && (
+                          <span className="input-group-append">
+                            <a
+                              href="/#"
+                              className="input-group-text text-dark"
+                              onClick={getEntireBalance}
+                              data-testid="maxBtn"
+                            >
+                              Max
+                            </a>
+                          </span>
+                        )}
+                        <ErrorMessage component="div" name="amount" className="invalid-feedback" />
+                      </div>
+                      {!(errors.amount && touched.amount) && (
+                        <small className="form-text">
+                          Available: <Denominate value={balance as string} decimals={18} />
+                        </small>
                       )}
-                      <ErrorMessage component="div" name="amount" className="invalid-feedback" />
                     </div>
-                    {!(errors.amount && touched.amount) && (
-                      <small className="form-text">
-                        Available: <Denominate value={balance as string} decimals={18}/>
-                      </small>
-                    )}
-                  </div>
-                  <div className="d-flex justify-content-center align-items-center flex-wrap">
-                    <button
-                      type="submit"
-                      className="btn btn-primary mx-2"
-                      id="continueDelegate"
-                      data-testid="continueUndelegate"
-                    >
-                      Continue
-                    </button>
-                    <button id="closeButton" className="btn btn-link mx-2" onClick={handleClose}>
-                      Close
-                    </button>
-                  </div>
-                </form>
-              );
-            }}
-          </Formik>
+                    <div className="d-flex justify-content-center align-items-center flex-wrap">
+                      <button
+                        type="submit"
+                        className="btn btn-primary mx-2"
+                        id="continueDelegate"
+                        data-testid="continueUndelegate"
+                      >
+                        Continue
+                      </button>
+                      <button id="closeButton" className="btn btn-link mx-2" onClick={handleClose}>
+                        Close
+                      </button>
+                    </div>
+                  </form>
+                );
+              }}
+            </Formik>
+          </div>
         </div>
-      </div>
+      )}
+
+      {loading && <State icon={faCircleNotch} iconClass="fa-spin text-primary" />}
     </Modal>
   );
 };

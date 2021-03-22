@@ -26,9 +26,9 @@ const MyDelegation = () => {
   const [displayRewards, setDisplayRewards] = React.useState(false);
   const [displayCumulatedRewards, setDisplayCumulatedRewards] = React.useState(false);
   const [displayUndelegate, setDisplayUndelegate] = React.useState(false);
+  const [interval, setInt] = React.useState<NodeJS.Timeout | undefined>(undefined);
 
-  const getAllData = () => {
-    dispatch({ type: 'loading', loading: true });
+  const getAllData = React.useCallback(() => {
     getClaimableRewards(dapp, address, delegationContract)
       .then(value => {
         if (value.returnData.length > 0 && value.returnData[0]?.asNumber !== 0) {
@@ -83,9 +83,23 @@ const MyDelegation = () => {
           loading: false,
         });
       });
-  };
+  }, []);
 
-  React.useEffect(getAllData, []);
+  React.useEffect(() => {
+    const fetch = async () => {
+      getAllData();
+    };
+    setInt(
+      setInterval(async () => {
+        await fetch();
+      }, 6000)
+    );
+    fetch();
+    return () => {
+      clearInterval(interval as NodeJS.Timeout);
+    };
+  }, []);
+
   return (
     <>
       {loading ? (
@@ -137,7 +151,9 @@ const MyDelegation = () => {
                   />
                 )}
               </div>
-              {displayUndelegate && <Calculator balance={parseFloat(userActiveStake.replace(',', ''))} input={false} />}
+              {displayUndelegate && (
+                <Calculator balance={parseFloat(userActiveStake.replace(',', ''))} input={false} />
+              )}
             </div>
           </div>
         </div>
