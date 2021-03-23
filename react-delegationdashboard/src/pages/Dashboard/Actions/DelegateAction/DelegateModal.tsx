@@ -5,20 +5,18 @@ import { object, string } from 'yup';
 import { Modal } from 'react-bootstrap';
 import { useContext } from 'context';
 import Denominate from 'components/Denominate';
-import State from 'components/State';
 import { entireBalance } from 'helpers';
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { denomination, decimals } from 'config';
+import denominate from 'components/Denominate/formatters';
 
 interface DelegateModalType {
   show: boolean;
-  loading: boolean;
   balance: string;
   handleClose: () => void;
   handleContinue: (value: string) => void;
 }
 
-const DelegateModal = ({ show, loading, balance, handleClose, handleContinue }: DelegateModalType) => {
+const DelegateModal = ({ show, balance, handleClose, handleContinue }: DelegateModalType) => {
   const { egldLabel, contractOverview, totalActiveStake } = useContext();
 
   const available = entireBalance({
@@ -40,7 +38,7 @@ const DelegateModal = ({ show, loading, balance, handleClose, handleContinue }: 
 
   return (
     <Modal show={show} onHide={handleClose} className="modal-container" animation={false} centered>
-      {!loading &&<div className="card">
+      <div className="card">
         <div className="card-body p-spacer text-center">
           <p className="h6 mb-spacer" data-testid="delegateTitle">
             Delegate now
@@ -153,8 +151,7 @@ const DelegateModal = ({ show, loading, balance, handleClose, handleContinue }: 
             }}
           </Formik>
         </div>
-      </div>}
-      {loading && <State icon={faCircleNotch} iconClass="fa-spin text-primary" />}
+      </div>
     </Modal>
   );
 };

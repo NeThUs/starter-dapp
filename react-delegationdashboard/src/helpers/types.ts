@@ -25,7 +25,6 @@ export interface StatCardType {
 export interface ActionModalType {
   balance?: string;
   show: boolean;
-  loading?: boolean;
   title: string;
   description: string;
   handleClose: () => void;

@@ -98,7 +98,7 @@ const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     if (actionAllowed) {
-                      nodeTransactions[action](key.blsKey)
+                      nodeTransactions[action](key.blsKey, dapp, delegationContract)
                         .then()
                         .catch(e => console.error('error', e));
                     }

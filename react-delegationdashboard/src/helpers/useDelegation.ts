@@ -1,6 +1,8 @@
+import { useContext } from 'context';
 import { Delegation } from 'contracts';
 
 export default function useDelegation() {
-  const delegation = new Delegation();
+  const { dapp, delegationContract } = useContext();
+  const delegation = new Delegation(dapp.proxy, delegationContract, dapp.provider);
   return { delegation };
 }

@@ -14,16 +14,16 @@ const UndelegatedValueRow = ({
   const { egldLabel } = useContext();
   const [counter, setCounter] = React.useState(value.timeLeft);
 
-  const handleWithdraw = async () => {
-    try {
-      await delegation.sendTransaction('0', 'withdraw');
-    } catch (error) {
-      console.error('handleWithdraw error', error);
-    }
+  const handleWithdraw = () => {
+    delegation
+      .sendTransaction('0', 'withdraw')
+      .then()
+      .catch(e => console.error('handleWithdraw error', e));
   };
 
   useEffect(() => {
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    console.log(isDisabled);
     if (counter === 0) setIsDisabled(false);
   }, [counter]);
 

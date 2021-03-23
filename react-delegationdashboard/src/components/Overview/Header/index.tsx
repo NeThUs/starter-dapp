@@ -25,9 +25,8 @@ const Header = () => {
     return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
   };
 
-  const logOut = async () => {
-    await window.erdbox.closeWallet();
-    dispatch({ type: 'logout'});
+  const logOut = () => {
+    dispatch({ type: 'logout', provider: dapp.provider });
   };
 
   const balance = denominate({

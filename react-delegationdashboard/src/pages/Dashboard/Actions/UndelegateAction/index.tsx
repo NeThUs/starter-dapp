@@ -12,25 +12,15 @@ const UndelegateAction = ({balance}: UndelegateModalType) => {
   const { egldLabel } = useContext();
   const { delegation } = useDelegation();
   const [showModal, setShowModal] = useState(false);
-  const [loadingModal, setLoadingModal] = useState(false);
 
-  const handleUndelegate = async (value: string) => {
-    try {
-      setLoadingModal(true);
-      await delegation.sendTransaction('0', 'unDelegate', nominateValToHex(value));
-    } catch (error) {
-      console.error('handleRedelegateRewards ', error);
-    } finally {
-      setLoadingModal(false);
-      setShowModal(false);
-    }
+  const handleUndelegate = (value: string) => {
+    delegation.sendTransaction('0', 'unDelegate', nominateValToHex(value)).then();
   };
   return (
     <div>
       <button onClick={() => setShowModal(true)} className="btn btn-primary ml-3 mb-3">
         Undelegate
       </button>
-      
       <UndelegateModal
         show={showModal}
         balance={balance}
@@ -39,7 +29,6 @@ const UndelegateAction = ({balance}: UndelegateModalType) => {
         handleClose={() => {
           setShowModal(false);
         }}
-        loading={loadingModal}
         handleContinue={handleUndelegate}
       />
     </div>

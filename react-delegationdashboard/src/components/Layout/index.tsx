@@ -12,14 +12,13 @@ import {
   NetworkStake,
   Stats,
 } from 'helpers/contractDataDefinitions';
-import React, { useState } from 'react';
+import React from 'react';
 import { calculateAPR } from './APRCalculation';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
 const Layout = ({ children, page }: { children: React.ReactNode; page: string }) => {
   const dispatch = useDispatch();
-  const [interval, setInt] = useState<NodeJS.Timeout | undefined>(undefined);
   const { dapp, delegationContract } = useContext();
   const {
     getContractConfig,
@@ -60,8 +59,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
       value.returnData[2]?.asString
     );
   };
-
-  const getLatestElrondData = async () => {
+  React.useEffect(() => {
     Promise.all([
       getMetaData(dapp, delegationContract),
       getNumUsers(dapp, delegationContract),
@@ -154,21 +152,6 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
       )
       .catch(e => {
       });
-  };
-
-  React.useEffect(() => {
-    const fetch = async () => {
-      await getLatestElrondData();
-    };
-    setInt(
-      setInterval(async () => {
-        await fetch();
-      }, 30000)
-    );
-    fetch();
-    return () => {
-      clearInterval(interval as NodeJS.Timeout);
-    };
   }, []);
 
   return (

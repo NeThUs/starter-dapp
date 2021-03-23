@@ -15,8 +15,9 @@ function ContextProvider({ children }: ContextType) {
   const [interval, setInt] = useState<NodeJS.Timeout | undefined>(undefined);
 
   const getLatestElrondData = async () => {
-    await axios.get('https://testnet-api.elrond.com/quotes/latest').then(res => {
-      dispatch({ type: 'setUSD', USD: res.data.usd });
+    await axios.get('https://testnet-api.elrond.com/quotes/latest')
+    .then(res => {
+      dispatch({type: 'setUSD', USD: res.data.usd});
     });
   };
 
@@ -24,11 +25,7 @@ function ContextProvider({ children }: ContextType) {
     const fetch = async () => {
       await getLatestElrondData();
     };
-    setInt(
-      setInterval(async () => {
-        await fetch();
-      }, 20000)
-    );
+    setInt(setInterval(async () => {await fetch();}, 20000));
     fetch();
     return () => {
       clearInterval(interval as NodeJS.Timeout);
