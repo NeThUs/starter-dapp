@@ -33,7 +33,7 @@ export const network: NetworkType = {
   apiAddress: 'https://api.elrond.com',
   gatewayAddress: 'https://gateway.elrond.com',
   explorerAddress: 'https://explorer.elrond.com/',
-  delegationContract: 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqyllllls8wlxd9',
+  delegationContract: 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzhllllsp9wvyl',
 };
 
 const networkSchema = object({
@@ -92,7 +92,7 @@ export const delegationContractData: DelegationContractType[] = [
   },
   {
     name: 'addNodes',
-    gasLimit: 12000000,
+    gasLimit: 70000000,
     data: 'addNodes',
   },
   {
