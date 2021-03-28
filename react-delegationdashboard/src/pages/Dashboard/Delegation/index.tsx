@@ -105,8 +105,8 @@ const MyDelegation = () => {
               <div className="cards d-flex flex-wrap mr-spacer">
                 {userActiveStake === String(0) ? (
                   <State
-                    title="Our agency is full!"
-                    description="Please look for another agency or keep watching our contract in Maiar/Web wallet until we have new spaces"
+                    title="Stake Now"
+                    action={<DelegateAction />}
                   />
                 ) : (
                   <StatCard
