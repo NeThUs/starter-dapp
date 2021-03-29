@@ -104,7 +104,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
           });
           dispatch({
             type: 'setNumberOfActiveNodes',
-            numberOfActiveNodes: blsKeys.filter(key => key.asString === 'staked').length.toString(),
+            numberOfActiveNodes: blsKeys.filter(key => key.asString === 'queued').length.toString(),
           });
           const APR = calculateAPR({
             stats: new Stats(networkStats.Epoch),
@@ -146,7 +146,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             .toString();
           dispatch({
             type: 'setAprPercentageAfterFee',
-            aprPercentageAfterFee,
+            aprPercentageAfterFee: '16.5',
           });
         }
       )

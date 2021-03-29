@@ -36,6 +36,7 @@ const Home = () => {
               <h4 className="title">Delegation Manager</h4>
               <hr className="divider"/>
               <div>
+                <p>The first reward will be distributed on 07 April!</p>
                 <WalletLogin />
               </div>
             </div>
