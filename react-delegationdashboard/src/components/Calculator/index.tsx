@@ -77,7 +77,7 @@ export const Calculator = ({balance = 50, input = true}: Balance) => {
           className="form-control"
           style={{textAlign: 'center'}}
           id="amount"
-          min="10"
+          min="1"
           step="any"
           value={value}
           autoComplete="off"
