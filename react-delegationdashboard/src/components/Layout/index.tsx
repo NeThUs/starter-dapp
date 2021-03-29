@@ -146,7 +146,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             .toString();
           dispatch({
             type: 'setAprPercentageAfterFee',
-            aprPercentageAfterFee: '16.5',
+            aprPercentageAfterFee: '19.5',
           });
         }
       )
