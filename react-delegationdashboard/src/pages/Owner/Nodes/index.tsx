@@ -76,6 +76,8 @@ const Nodes = () => {
                   <tr>
                     <th>Public key</th>
                     <th>Downtime</th>
+                    <th>Instances</th>
+                    <th>Peer Type</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>

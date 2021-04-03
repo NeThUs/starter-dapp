@@ -55,7 +55,9 @@ const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
     <tr ref={ref}>
       <td>
         <div className="d-flex align-items-center text-nowrap trim">
-          <span className="text-truncate">{nodes[key.blsKey].nodeDisplayName}</span>
+          <span className="text-truncate">
+            {nodes[key.blsKey] ? nodes[key.blsKey].nodeDisplayName : key.blsKey}
+          </span>
           <a
             href={`${explorerAddress}nodes/${key.blsKey}`}
             {...{
@@ -69,22 +71,35 @@ const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
       </td>
       <td>
         <div className="d-flex align-items-center text-nowrap trim">
-          <span className="text-truncate">{nodes[key.blsKey].nodeDisplayName}</span>
-          <a
-            href={`${explorerAddress}nodes/${key.blsKey}`}
-            {...{
-              target: '_blank',
-            }}
-            className="ml-2"
-          >
-            <FontAwesomeIcon icon={faSearch} className="text-muted" />
-          </a>
+          <span className="text-truncate">
+            {nodes[key.blsKey] ? nodes[key.blsKey].totalDownTimeSec : 0}
+          </span>
         </div>
       </td>
       <td>
-          <span className={`badge badge-sm badge-light-${statusColor} text-${statusColor}`}>
-            {nodes[key.blsKey].totalDownTimeSec}
+        <div className="d-flex align-items-center text-nowrap trim">
+          <span className="text-truncate">
+            {nodes[key.blsKey] ? nodes[key.blsKey].numInstances : 1}
           </span>
+        </div>
+      </td>
+      <td>
+        <div className="d-flex align-items-center text-nowrap trim">
+          <span className={`badge badge-sm badge-light-${statusColor} text-${statusColor}`}>
+            {nodes[key.blsKey] ? nodes[key.blsKey].peerType : 'Not Running'}
+          </span>
+        </div>
+      </td>
+      <td>
+        {key.status.key === 'queued' && key.queueIndex && key.queueSize ? (
+          <span className={`badge badge-sm badge-light-${statusColor} text-${statusColor}`}>
+            {key.status.value} ({key.queueIndex}/{key.queueSize})
+          </span>
+        ) : (
+          <span className={`badge badge-sm badge-light-${statusColor} text-${statusColor}`}>
+            {key.status.value}
+          </span>
+        )}
       </td>
 
       <td>
