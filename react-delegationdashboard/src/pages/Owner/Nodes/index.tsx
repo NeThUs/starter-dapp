@@ -75,6 +75,7 @@ const Nodes = () => {
                 <thead className="text-uppercase font-weight-normal">
                   <tr>
                     <th>Public key</th>
+                    <th>Downtime</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>

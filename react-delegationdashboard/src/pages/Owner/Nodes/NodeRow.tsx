@@ -22,7 +22,7 @@ const allowedActions: { [key: string]: ActionType[] } = {
 };
 
 const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
-  const { explorerAddress, dapp, delegationContract } = useContext();
+  const { explorerAddress, dapp, delegationContract, nodes } = useContext();
   const ref = React.useRef(null);
 
   const [remaining, setRemaining] = React.useState(0);
@@ -55,7 +55,7 @@ const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
     <tr ref={ref}>
       <td>
         <div className="d-flex align-items-center text-nowrap trim">
-          <span className="text-truncate">{key.blsKey}</span>
+          <span className="text-truncate">{nodes[key.blsKey].nodeDisplayName}</span>
           <a
             href={`${explorerAddress}nodes/${key.blsKey}`}
             {...{
@@ -68,15 +68,23 @@ const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
         </div>
       </td>
       <td>
-        {key.status.key === 'queued' && key.queueIndex && key.queueSize ? (
+        <div className="d-flex align-items-center text-nowrap trim">
+          <span className="text-truncate">{nodes[key.blsKey].nodeDisplayName}</span>
+          <a
+            href={`${explorerAddress}nodes/${key.blsKey}`}
+            {...{
+              target: '_blank',
+            }}
+            className="ml-2"
+          >
+            <FontAwesomeIcon icon={faSearch} className="text-muted" />
+          </a>
+        </div>
+      </td>
+      <td>
           <span className={`badge badge-sm badge-light-${statusColor} text-${statusColor}`}>
-            {key.status.value} ({key.queueIndex}/{key.queueSize})
+            {nodes[key.blsKey].totalDownTimeSec}
           </span>
-        ) : (
-          <span className={`badge badge-sm badge-light-${statusColor} text-${statusColor}`}>
-            {key.status.value}
-          </span>
-        )}
       </td>
 
       <td>

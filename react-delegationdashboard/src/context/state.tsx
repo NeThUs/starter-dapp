@@ -21,6 +21,26 @@ export interface DappState {
   apiProvider: ApiProvider;
 }
 
+export interface Nodes {
+  [key: string]: NodeDetails;
+}
+export interface NodeDetails {
+  timeStamp: string;
+  publicKey: string;
+  versionNumber: string;
+  nodeDisplayName: string;
+  identity: string;
+  totalUpTimeSec: number;
+  totalDownTimeSec: number;
+  maxInactiveTime: string;
+  receivedShardID: number;
+  computedShardID: number;
+  peerType: string;
+  isActive: boolean;
+  nonce: number;
+  numInstances: number;
+}
+
 export interface StateType {
   dapp: DappState;
   loading: boolean;
@@ -37,6 +57,7 @@ export interface StateType {
   totalActiveStake: string;
   numberOfActiveNodes: string;
   numUsers: number;
+  nodes: Nodes,
   aprPercentage: string;
   aprPercentageAfterFee: string;
   contractOverview: ContractOverview;
@@ -86,18 +107,19 @@ export const initialState = () => {
         sessionNetwork.gatewayAddress !== undefined
           ? sessionNetwork?.gatewayAddress
           : 'https://gateway.elrond.com/',
-        4000
+        10000
       ),
       apiProvider: new ApiProvider(
         sessionNetwork.apiAddress !== undefined
           ? sessionNetwork?.apiAddress
           : 'https://api.elrond.com/',
-        4000
+        10000,
       ),
     },
     loading: false,
     USD: 0,
     error: '',
+    nodes: getItem('nodes'),
     loggedIn: !!getItem('logged_in'),
     address: getItem('address'),
     account: emptyAccount,

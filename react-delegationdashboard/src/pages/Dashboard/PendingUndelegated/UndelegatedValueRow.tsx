@@ -23,7 +23,6 @@ const UndelegatedValueRow = ({
 
   useEffect(() => {
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
-    console.log(isDisabled);
     if (counter === 0) setIsDisabled(false);
   }, [counter]);
 
