@@ -17,7 +17,7 @@ function ContextProvider({ children }: ContextType) {
   const [interval, setInt] = useState<NodeJS.Timeout | undefined>(undefined);
 
   const getLatestElrondData = async () => {
-    await axios.get('https://testnet-api.elrond.com/quotes/latest').then(res => {
+    await axios.get('https://api.elrond.com/quotes/latest').then(res => {
       dispatch({ type: 'setUSD', USD: res.data.usd });
     });
   };
