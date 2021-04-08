@@ -20,7 +20,6 @@ const Views = () => {
     address,
     contractOverview,
     aprPercentageAfterFee,
-    eligibleAprPercentage,
     numberOfEligibleNodes,
     eligibleAprPercentageAfterFee,
     numUsers,

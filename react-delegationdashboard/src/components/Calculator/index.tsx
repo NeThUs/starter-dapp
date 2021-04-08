@@ -19,7 +19,7 @@ export const Calculator = ({balance = 50, input = true}: Balance) => {
     let loginAddress = new Address(address).hex();
     return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
   };
-  const APR = !input ? eligibleAprPercentageAfterFee : isAdmin() ? eligibleAprPercentage : aprPercentageAfterFee;
+  const APR = input ? aprPercentageAfterFee : isAdmin() ? eligibleAprPercentage : eligibleAprPercentageAfterFee;
   const getReward = (value: number) => {
     setValue(value);
   };
