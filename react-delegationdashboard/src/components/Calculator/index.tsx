@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useContext } from 'context';
 import StatCard from 'components/StatCard';
+import { Address } from '@elrondnetwork/erdjs/out';
 
 interface Balance {
   balance?: number
   input?: boolean
 }
 export const Calculator = ({balance = 50, input = true}: Balance) => {
-  const { egldLabel, aprPercentageAfterFee, eligibleAprPercentageAfterFee, USD } = useContext();
+  const { egldLabel, aprPercentageAfterFee, eligibleAprPercentageAfterFee, eligibleAprPercentage, USD, address, contractOverview } = useContext();
   const [daily, setDaily] = useState('0');
   const [weekly, setWeekly] = useState('0');
   const [monthly, setMonthly] = useState('0');
   const [yearly, setYearly] = useState('0');
   const [value, setValue] = useState(balance);
 
-  const APR = !input ? eligibleAprPercentageAfterFee : aprPercentageAfterFee;
+  const isAdmin = () => {
+    let loginAddress = new Address(address).hex();
+    return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
+  };
+  const APR = !input ? eligibleAprPercentageAfterFee : isAdmin() ? eligibleAprPercentage : aprPercentageAfterFee;
   const getReward = (value: number) => {
     setValue(value);
   };
