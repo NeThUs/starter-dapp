@@ -93,7 +93,7 @@ const Views = () => {
         valueUnit=""
         color="purple"
         svg="nodes.svg"
-        percentage={'Nodes which produce rewards today'}
+        percentage={'Currently active reward producing nodes'}
       />
       <StatCard
         title="All Nodes"
@@ -107,7 +107,7 @@ const Views = () => {
         )}% of total nodes`}
       />
       <StatCard
-        title="Today APR"
+        title="Today’s APR"
         value={eligibleAprPercentageAfterFee}
         valueUnit=""
         color="orange"
