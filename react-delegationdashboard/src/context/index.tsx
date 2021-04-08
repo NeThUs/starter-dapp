@@ -30,7 +30,7 @@ function ContextProvider({ children }: ContextType) {
       await axios.get((network.apiAddress as string) + '/node/heartbeatstatus').then(nodes => {
         let result: Nodes = {};
         const res = nodes.data.data.heartbeats.filter(
-          (node: NodeDetails) => node.identity === 'truststaking'
+          (node: NodeDetails) => node.identity === 'truststaking' && !node.nodeDisplayName.includes('Private')
         );
         res.forEach((node: NodeDetails) => {
           result[node.publicKey] = node;

@@ -15,8 +15,11 @@ export type ActionType =
   | { type: 'setNetworkConfig'; networkConfig: StateType['networkConfig'] }
   | { type: 'setAgencyMetaData'; agencyMetaData: StateType['agencyMetaData'] }
   | { type: 'setNumberOfActiveNodes'; numberOfActiveNodes: StateType['numberOfActiveNodes'] }
+  | { type: 'setNumberOfEligibleNodes'; numberOfEligibleNodes: StateType['numberOfEligibleNodes'] }
   | { type: 'setNumUsers'; numUsers: StateType['numUsers'] }
   | { type: 'setTotalActiveStake'; totalActiveStake: StateType['totalActiveStake'] }
+  | { type: 'setEligibleAprPercentage'; eligibleAprPercentage: StateType['eligibleAprPercentage'] }
+  | { type: 'setEligibleAprPercentageAfterFee'; eligibleAprPercentageAfterFee: StateType['eligibleAprPercentageAfterFee'] }
   | { type: 'setAprPercentageAfterFee'; aprPercentageAfterFee: StateType['aprPercentageAfterFee'] }
   | { type: 'setAprPercentage'; aprPercentage: StateType['aprPercentage'] };
 
@@ -113,6 +116,14 @@ export function reducer(state: StateType, action: ActionType): StateType {
       };
     }
 
+    case 'setNumberOfEligibleNodes': {
+      const { numberOfEligibleNodes } = action;
+      return {
+        ...state,
+        numberOfEligibleNodes,
+      };
+    }
+
     case 'setNumUsers': {
       const { numUsers } = action;
       return {
@@ -134,6 +145,22 @@ export function reducer(state: StateType, action: ActionType): StateType {
       return {
         ...state,
         aprPercentage,
+      };
+    }
+
+    case 'setEligibleAprPercentageAfterFee': {
+      const { eligibleAprPercentageAfterFee } = action;
+      return {
+        ...state,
+        eligibleAprPercentageAfterFee,
+      };
+    }
+
+    case 'setEligibleAprPercentage': {
+      const { eligibleAprPercentage } = action;
+      return {
+        ...state,
+        eligibleAprPercentage,
       };
     }
 

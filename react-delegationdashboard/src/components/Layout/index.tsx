@@ -19,7 +19,7 @@ import Navbar from './Navbar';
 
 const Layout = ({ children, page }: { children: React.ReactNode; page: string }) => {
   const dispatch = useDispatch();
-  const { dapp, delegationContract } = useContext();
+  const { dapp, delegationContract, nodes } = useContext();
   const {
     getContractConfig,
     getTotalActiveStake,
@@ -102,9 +102,16 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             type: 'setTotalActiveStake',
             totalActiveStake: activeStake.asBigInt.toFixed(),
           });
+          const eligibleNodes = Object.keys(nodes).filter(
+            node => nodes[node].peerType === 'eligible'
+          ).length;
           dispatch({
             type: 'setNumberOfActiveNodes',
             numberOfActiveNodes: blsKeys.filter(key => key.asString === 'staked').length.toString(),
+          });
+          dispatch({
+            type: 'setNumberOfEligibleNodes',
+            numberOfEligibleNodes: eligibleNodes.toString(),
           });
           const APR = calculateAPR({
             stats: new Stats(networkStats.Epoch),
@@ -124,6 +131,27 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             blsKeys: blsKeys,
             totalActiveStake: activeStake.asBigInt.toFixed(),
           });
+
+          const APREligible = calculateAPR({
+            stats: new Stats(networkStats.Epoch),
+            networkConfig: new NetworkConfig(
+              networkConfig.TopUpFactor,
+              networkConfig.RoundDuration,
+              networkConfig.RoundsPerEpoch,
+              networkStatus.RoundsPassedInCurrentEpoch,
+              new BigNumber(networkConfig.TopUpRewardsGradientPoint)
+            ),
+            networkStake: new NetworkStake(
+              networkStake.TotalValidators,
+              networkStake.ActiveValidators,
+              networkStake.QueueSize,
+              new BigNumber(networkStake.TotalStaked)
+            ),
+            blsKeys: blsKeys,
+            eligibleNodes,
+            getEligibleAPR: true,
+            totalActiveStake: activeStake.asBigInt.toFixed(),
+          });
           dispatch({
             type: 'setNetworkConfig',
             networkConfig: new NetworkConfig(
@@ -138,9 +166,20 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             type: 'setAprPercentage',
             aprPercentage: APR,
           });
+          dispatch({
+            type: 'setEligibleAprPercentage',
+            eligibleAprPercentage: APREligible,
+          });
           const aprPercentageAfterFee = (
             parseFloat(APR) -
             (((parseFloat(scOverview.serviceFee as string) / 100) * parseFloat(APR)) as number)
+          )
+            .toFixed(2)
+            .toString();
+          const aprEligiblePercentageAfterFee = (
+            parseFloat(APREligible) -
+            (((parseFloat(scOverview.serviceFee as string) / 100) *
+              parseFloat(APREligible)) as number)
           )
             .toFixed(2)
             .toString();
@@ -148,10 +187,13 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             type: 'setAprPercentageAfterFee',
             aprPercentageAfterFee,
           });
+          dispatch({
+            type: 'setEligibleAprPercentageAfterFee',
+            eligibleAprPercentageAfterFee: aprEligiblePercentageAfterFee,
+          });
         }
       )
-      .catch(e => {
-      });
+      .catch(e => {});
   }, []);
 
   return (

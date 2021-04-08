@@ -27,17 +27,25 @@ const calculateAPR = ({
   networkConfig: networkConfig,
   networkStake: networkStake,
   blsKeys: blsKeys,
+  eligibleNodes: eligibleNodes,
   totalActiveStake: totalActiveStake,
+  getEligibleAPR: getEligibleAPR = false,
 }: {
   stats: Stats;
   networkConfig: NetworkConfig;
   networkStake: NetworkStake;
   blsKeys: ContractReturnData[];
+  eligibleNodes?: number;
+  getEligibleAPR?: boolean;
   totalActiveStake: string;
 }) => {
   const allNodes = blsKeys.filter(key => key.asString === 'staked' || key.asString === 'jailed')
     .length;
-  const allActiveNodes = blsKeys.filter(key => key.asString === 'staked').length;
+  let allActiveNodes = blsKeys.filter(key => key.asString === 'staked').length;
+  if (getEligibleAPR && eligibleNodes) {
+      allActiveNodes = eligibleNodes;
+      console.log('heree');
+  }
   if (allActiveNodes <= 0) {
     return '0.00';
   }

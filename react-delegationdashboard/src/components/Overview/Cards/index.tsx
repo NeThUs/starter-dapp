@@ -20,6 +20,9 @@ const Views = () => {
     address,
     contractOverview,
     aprPercentageAfterFee,
+    eligibleAprPercentage,
+    numberOfEligibleNodes,
+    eligibleAprPercentageAfterFee,
     numUsers,
   } = useContext();
   const [networkStake, setNetworkStake] = useState(new NetworkStake());
@@ -84,9 +87,17 @@ const Views = () => {
           })
         )}% of total stake`}
       />
-      <StatCard title="Number of Users" value={numUsers.toString()} color="orange" svg="user.svg" />
+      <StatCard title="Number of Users" value={numUsers.toString()} color="orange" svg="user.svg" />      
       <StatCard
-        title="Number of Nodes"
+        title="Eligible Nodes"
+        value={numberOfEligibleNodes}
+        valueUnit=""
+        color="purple"
+        svg="nodes.svg"
+        percentage={'Nodes which produce rewards today'}
+      />
+      <StatCard
+        title="All Nodes"
         value={numberOfActiveNodes}
         valueUnit=""
         color="purple"
@@ -97,12 +108,21 @@ const Views = () => {
         )}% of total nodes`}
       />
       <StatCard
+        title="Today APR"
+        value={eligibleAprPercentageAfterFee}
+        valueUnit=""
+        color="orange"
+        svg="leaf-solid.svg"
+        percentage="Current epoch annual percentage rate average"
+        tooltipText="This is an aproximate APR calculation for this year based on the current epoch eligible nodes"
+      />
+      <StatCard
         title="Computed APR"
         value={aprPercentageAfterFee}
         valueUnit=""
         color="orange"
         svg="leaf-solid.svg"
-        percentage="Annual percentage rate (ESTIMATED)"
+        percentage="Annual percentage rate average"
         tooltipText="This is an aproximate APR calculation for this year based on the current epoch"
       />
       <StatCard

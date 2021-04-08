@@ -12,7 +12,7 @@ import StatCard from 'components/StatCard';
 import { Calculator } from 'components/Calculator';
 
 const MyDelegation = () => {
-  const { dapp, address, egldLabel, delegationContract, loading } = useContext();
+  const { dapp, address, egldLabel, delegationContract, loading, eligibleAprPercentageAfterFee } = useContext();
   const dispatch = useDispatch();
   const {
     getClaimableRewards,

@@ -7,31 +7,32 @@ interface Balance {
   input?: boolean
 }
 export const Calculator = ({balance = 50, input = true}: Balance) => {
-  const { egldLabel, aprPercentageAfterFee, USD } = useContext();
+  const { egldLabel, aprPercentageAfterFee, eligibleAprPercentageAfterFee, USD } = useContext();
   const [daily, setDaily] = useState('0');
   const [weekly, setWeekly] = useState('0');
   const [monthly, setMonthly] = useState('0');
   const [yearly, setYearly] = useState('0');
   const [value, setValue] = useState(balance);
 
+  const APR = !input ? eligibleAprPercentageAfterFee : aprPercentageAfterFee;
   const getReward = (value: number) => {
     setValue(value);
   };
 
   useEffect(() => {
-    setYearly((value * (parseFloat(aprPercentageAfterFee) / 100)).toFixed(4));
+    setYearly((value * (parseFloat(APR) / 100)).toFixed(4));
     setMonthly((parseFloat(yearly) / 12).toFixed(4));
     setWeekly((parseFloat(yearly) / 52).toFixed(4));
     setDaily((parseFloat(yearly) / 365).toFixed(4));
   }, []);
 
   useEffect(() => {
-    setYearly((value * (parseFloat(aprPercentageAfterFee) / 100)).toFixed(4));
+    setYearly((value * (parseFloat(APR) / 100)).toFixed(4));
     setMonthly((parseFloat(yearly) / 12).toFixed(4));
     setWeekly((parseFloat(yearly) / 52).toFixed(4));
     setDaily((parseFloat(yearly) / 365).toFixed(4));
-  }, [value, aprPercentageAfterFee, yearly]);
-
+  }, [value, aprPercentageAfterFee, eligibleAprPercentageAfterFee]);
+  
   const cards = [
     {
       label: 'Daily',

@@ -56,10 +56,13 @@ export interface StateType {
   delegationContract?: string;
   totalActiveStake: string;
   numberOfActiveNodes: string;
+  numberOfEligibleNodes: string;
   numUsers: number;
+  eligibleAprPercentage: string;
   nodes: Nodes,
   aprPercentage: string;
   aprPercentageAfterFee: string;
+  eligibleAprPercentageAfterFee: string;
   contractOverview: ContractOverview;
   networkConfig: NetworkConfig;
   agencyMetaData: AgencyMetadata;
@@ -130,9 +133,12 @@ export const initialState = () => {
     networkConfig: emptyNetworkConfig,
     agencyMetaData: emptyAgencyMetaData,
     numberOfActiveNodes: '...',
+    numberOfEligibleNodes: '...',
     numUsers: 0,
     totalActiveStake: '...',
     aprPercentage: '...',
+    eligibleAprPercentage: '...',
+    eligibleAprPercentageAfterFee: '...',
     aprPercentageAfterFee: '...',
   };
 };
