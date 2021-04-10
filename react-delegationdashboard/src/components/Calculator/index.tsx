@@ -8,7 +8,7 @@ interface Balance {
   input?: boolean
 }
 export const Calculator = ({balance = 50, input = true}: Balance) => {
-  const { egldLabel, aprPercentageAfterFee, eligibleAprPercentageAfterFee, eligibleAprPercentage, USD, address, contractOverview } = useContext();
+  const { egldLabel, aprPercentageAfterFee, eligibleAprPercentageAfterFee, eligibleAprPercentage, USD, address, contractOverview, nodes } = useContext();
   const [daily, setDaily] = useState('0');
   const [weekly, setWeekly] = useState('0');
   const [monthly, setMonthly] = useState('0');
@@ -36,7 +36,7 @@ export const Calculator = ({balance = 50, input = true}: Balance) => {
     setMonthly((parseFloat(yearly) / 12).toFixed(4));
     setWeekly((parseFloat(yearly) / 52).toFixed(4));
     setDaily((parseFloat(yearly) / 365).toFixed(4));
-  }, [value, aprPercentageAfterFee, eligibleAprPercentageAfterFee]);
+  }, [value, aprPercentageAfterFee, eligibleAprPercentageAfterFee, nodes]);
   
   const cards = [
     {

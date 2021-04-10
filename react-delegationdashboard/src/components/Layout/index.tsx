@@ -1,10 +1,11 @@
 import { QueryResponse } from '@elrondnetwork/erdjs/out/smartcontracts/query';
 import BigNumber from 'bignumber.js';
 import denominate from 'components/Denominate/formatters';
-import { denomination, decimals } from 'config';
+import { denomination, decimals, network } from 'config';
 import { useContext, useDispatch } from 'context';
-import { emptyAgencyMetaData } from 'context/state';
+import { emptyAgencyMetaData, NodeDetails, Nodes } from 'context/state';
 import { contractViews } from 'contracts/ContractViews';
+import axios from 'axios';
 import {
   AgencyMetadata,
   ContractOverview,
@@ -13,13 +14,32 @@ import {
   Stats,
 } from 'helpers/contractDataDefinitions';
 import React from 'react';
+import { getItem, setItem } from 'storage/session';
 import { calculateAPR } from './APRCalculation';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
+const syncNodes = async (): Promise<Nodes> => {
+  if (getItem('nodes')) {
+    return getItem('nodes');
+  }
+  return await axios.get((network.apiAddress as string) + '/node/heartbeatstatus').then(nodes => {
+    let result: Nodes = {};
+    const res = nodes.data.data.heartbeats.filter(
+      (node: NodeDetails) =>
+        node.identity === 'truststaking' && !node.nodeDisplayName.includes('Private')
+    );
+    res.forEach((node: NodeDetails) => {
+      result[node.publicKey] = node;
+    });
+    setItem('nodes', result);
+    return result;
+  });
+};
+
 const Layout = ({ children, page }: { children: React.ReactNode; page: string }) => {
   const dispatch = useDispatch();
-  const { dapp, delegationContract, nodes } = useContext();
+  const { dapp, delegationContract } = useContext();
   const {
     getContractConfig,
     getTotalActiveStake,
@@ -70,6 +90,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
       dapp.apiProvider.getNetworkStake(),
       dapp.proxy.getNetworkConfig(),
       dapp.proxy.getNetworkStatus(),
+      syncNodes(),
     ])
       .then(
         ([
@@ -84,7 +105,9 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
           networkStake,
           networkConfig,
           networkStatus,
+          nodes,
         ]) => {
+          dispatch({ type: 'setNodes', nodes });
           dispatch({
             type: 'setNumUsers',
             numUsers: numUsers.returnData[0].asNumber,

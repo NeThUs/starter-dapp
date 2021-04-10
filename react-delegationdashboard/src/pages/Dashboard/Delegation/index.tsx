@@ -106,7 +106,6 @@ const MyDelegation = () => {
                 {userActiveStake === String(0) ? (
                   <State
                     title="Stake Now"
-                    description="The first reward will be distributed on 07 April!"
                     action={<DelegateAction />}
                   />
                 ) : (
