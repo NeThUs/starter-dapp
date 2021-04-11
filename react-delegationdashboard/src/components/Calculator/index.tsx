@@ -36,7 +36,7 @@ export const Calculator = ({balance = 50, input = true}: Balance) => {
     setMonthly((parseFloat(yearly) / 12).toFixed(4));
     setWeekly((parseFloat(yearly) / 52).toFixed(4));
     setDaily((parseFloat(yearly) / 365).toFixed(4));
-  }, [value,aprPercentageAfterFee , aprPercentageAfterFee, nodes]);
+  }, [value,aprPercentageAfterFee , aprPercentageAfterFee, nodes, yearly]);
   
   const cards = [
     {
