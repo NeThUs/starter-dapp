@@ -8,7 +8,7 @@ interface Balance {
   input?: boolean
 }
 export const Calculator = ({balance = 50, input = true}: Balance) => {
-  const { egldLabel, aprPercentageAfterFee, eligibleAprPercentageAfterFee, eligibleAprPercentage, USD, address, contractOverview, nodes } = useContext();
+  const { egldLabel, aprPercentageAfterFee, eligibleAprPercentageAfterFee, aprPercentage, USD, address, contractOverview, nodes } = useContext();
   const [daily, setDaily] = useState('0');
   const [weekly, setWeekly] = useState('0');
   const [monthly, setMonthly] = useState('0');
@@ -19,7 +19,7 @@ export const Calculator = ({balance = 50, input = true}: Balance) => {
     let loginAddress = new Address(address).hex();
     return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
   };
-  const APR = input ? aprPercentageAfterFee : isAdmin() ? eligibleAprPercentage : eligibleAprPercentageAfterFee;
+  const APR = input ? aprPercentageAfterFee : isAdmin() ? aprPercentage : aprPercentageAfterFee;
   const getReward = (value: number) => {
     setValue(value);
   };
@@ -36,7 +36,7 @@ export const Calculator = ({balance = 50, input = true}: Balance) => {
     setMonthly((parseFloat(yearly) / 12).toFixed(4));
     setWeekly((parseFloat(yearly) / 52).toFixed(4));
     setDaily((parseFloat(yearly) / 365).toFixed(4));
-  }, [value, aprPercentageAfterFee, eligibleAprPercentageAfterFee, nodes]);
+  }, [value,aprPercentageAfterFee , aprPercentageAfterFee, nodes]);
   
   const cards = [
     {

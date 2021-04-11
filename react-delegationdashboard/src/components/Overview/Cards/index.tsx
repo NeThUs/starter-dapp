@@ -107,15 +107,6 @@ const Views = () => {
         )}% of total nodes`}
       />
       <StatCard
-        title="Today’s APR"
-        value={eligibleAprPercentageAfterFee}
-        valueUnit=""
-        color="orange"
-        svg="leaf-solid.svg"
-        percentage="Current epoch annual percentage rate average"
-        tooltipText="This is an aproximate APR calculation for this year based on the current epoch eligible nodes"
-      />
-      <StatCard
         title="Computed APR"
         value={aprPercentageAfterFee}
         valueUnit=""
