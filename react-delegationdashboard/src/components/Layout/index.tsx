@@ -155,26 +155,6 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             totalActiveStake: activeStake.asBigInt.toFixed(),
           });
 
-          const APREligible = calculateAPR({
-            stats: new Stats(networkStats.Epoch),
-            networkConfig: new NetworkConfig(
-              networkConfig.TopUpFactor,
-              networkConfig.RoundDuration,
-              networkConfig.RoundsPerEpoch,
-              networkStatus.RoundsPassedInCurrentEpoch,
-              new BigNumber(networkConfig.TopUpRewardsGradientPoint)
-            ),
-            networkStake: new NetworkStake(
-              networkStake.TotalValidators,
-              networkStake.ActiveValidators,
-              networkStake.QueueSize,
-              new BigNumber(networkStake.TotalStaked)
-            ),
-            blsKeys: blsKeys,
-            eligibleNodes,
-            getEligibleAPR: true,
-            totalActiveStake: activeStake.asBigInt.toFixed(),
-          });
           dispatch({
             type: 'setNetworkConfig',
             networkConfig: new NetworkConfig(
@@ -189,30 +169,16 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             type: 'setAprPercentage',
             aprPercentage: APR,
           });
-          dispatch({
-            type: 'setEligibleAprPercentage',
-            eligibleAprPercentage: APREligible,
-          });
           const aprPercentageAfterFee = (
             parseFloat(APR) -
             (((parseFloat(scOverview.serviceFee as string) / 100) * parseFloat(APR)) as number)
           )
             .toFixed(2)
             .toString();
-          const aprEligiblePercentageAfterFee = (
-            parseFloat(APREligible) -
-            (((parseFloat(scOverview.serviceFee as string) / 100) *
-              parseFloat(APREligible)) as number)
-          )
-            .toFixed(2)
-            .toString();
+
           dispatch({
             type: 'setAprPercentageAfterFee',
             aprPercentageAfterFee,
-          });
-          dispatch({
-            type: 'setEligibleAprPercentageAfterFee',
-            eligibleAprPercentageAfterFee: aprEligiblePercentageAfterFee,
           });
         }
       )

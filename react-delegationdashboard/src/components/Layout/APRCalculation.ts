@@ -16,7 +16,7 @@ const denominateValue = (value: string) => {
     input: value,
     denomination,
     decimals,
-    showLastNonZeroDecimal: true,
+    showLastNonZeroDecimal: false
   });
   const valueWithoutComma = denominatedValueString.replace(/,/g, '');
   return valueWithoutComma;
@@ -27,25 +27,17 @@ const calculateAPR = ({
   networkConfig: networkConfig,
   networkStake: networkStake,
   blsKeys: blsKeys,
-  eligibleNodes: eligibleNodes,
   totalActiveStake: totalActiveStake,
-  getEligibleAPR: getEligibleAPR = false,
 }: {
   stats: Stats;
   networkConfig: NetworkConfig;
   networkStake: NetworkStake;
   blsKeys: ContractReturnData[];
-  eligibleNodes?: number;
-  getEligibleAPR?: boolean;
   totalActiveStake: string;
 }) => {
   const allNodes = blsKeys.filter(key => key.asString === 'staked' || key.asString === 'jailed')
     .length;
-  let allActiveNodes = blsKeys.filter(key => key.asString === 'staked').length;
-  if (getEligibleAPR && eligibleNodes) {
-      allActiveNodes = eligibleNodes;
-      console.log('heree');
-  }
+  const allActiveNodes = blsKeys.filter(key => key.asString === 'staked').length;
   if (allActiveNodes <= 0) {
     return '0.00';
   }
@@ -76,9 +68,12 @@ const calculateAPR = ({
         parseInt(denominateValue(networkConfig.topUpRewardsGradientPoint.toFixed()))
     );
   const baseReward = rewardsPerEpochWithoutProtocolSustainability - topUpReward;
-
-  const validatorBaseStake = allActiveNodes * stakePerNode;
   const validatorTotalStake = parseInt(denominateValue(totalActiveStake));
+  const actualNumberOfNodes = Math.min(
+    Math.floor(validatorTotalStake / stakePerNode),
+    allActiveNodes
+  );
+  const validatorBaseStake = actualNumberOfNodes * stakePerNode;
   const validatorTopUpStake =
     ((validatorTotalStake - allNodes * stakePerNode) / allNodes) * allActiveNodes;
   const validatorTopUpReward =
