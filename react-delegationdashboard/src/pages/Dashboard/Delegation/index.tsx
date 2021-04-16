@@ -132,7 +132,7 @@ const MyDelegation = () => {
                     value={`${cumulatedRewards} ${egldLabel}`}
                     color="orange"
                     svg="dollar.svg"
-                    percentage={'This is the total reward you ever received!'}
+                    percentage={'This is the total of all the rewards you have received.'}
                   />
                 )}
               </div>
