@@ -2,47 +2,45 @@ import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Address } from '@elrondnetwork/erdjs/out';
 import { useContext, useDispatch } from 'context';
-import { denomination, decimals } from 'config';
-import { getItem } from 'storage/session';
-import denominate from 'components/Denominate/formatters';
 import SetAgencyMetaDataModal from './SetAgencyMetaDataModal';
+import { getItem } from 'storage/session';
+import Denominate from 'components/Denominate';
 
 const Header = () => {
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
   const {
     address,
     delegationContract,
     contractOverview,
-    account,
-    egldLabel,
-    dapp,
+    ledgerAccount,
     loggedIn,
+    account,
+    dapp,
   } = useContext();
-  const dispatch = useDispatch();
 
   const isAdmin = () => {
     let loginAddress = new Address(address).hex();
     return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
   };
 
+  const fetchLedger = () => {
+    if (getItem('ledgerLogin') && !ledgerAccount) {
+      const ledgerLogin = getItem('ledgerLogin');
+      dispatch({
+        type: 'setLedgerAccount',
+        ledgerAccount: {
+          index: ledgerLogin.index,
+          address: address,
+        },
+      });
+    }
+  };
+
   const logOut = () => {
     dispatch({ type: 'logout', provider: dapp.provider });
   };
-
-  const balance = denominate({
-    denomination,
-    decimals,
-    input: account.balance,
-    showLastNonZeroDecimal: false,
-  });
-
-  useEffect(() => {
-    if (balance === '...') {
-      dapp.proxy
-        .getAccount(new Address(getItem('address')))
-        .then(account => dispatch({ type: 'setBalance', balance: account.balance.toString() }));
-    }
-  }, []);
+  useEffect(fetchLedger, []);
 
   return (
     <div className="card-header align-items-center border-0 justify-content-between">
@@ -50,7 +48,7 @@ const Header = () => {
         <div className="text-truncate">
           <p className="opacity-6 mb-0">Balance</p>
           <span className="text-truncate">
-            {balance} {egldLabel}
+            <Denominate value={account.balance.toString()} />
           </span>
         </div>
         <div className="d-flex border-0 align-items-center justify-content-between">
@@ -67,9 +65,11 @@ const Header = () => {
 
           {isAdmin() && pathname == '/owner' ? <SetAgencyMetaDataModal /> : null}
           {loggedIn && (
-            <a href="/#" onClick={logOut} id="closeButton" className="btn btn-primary btn-sm ml-3">
-              Exit
-            </a>
+            <div className="d-flex align-items-center" style={{ minWidth: 0 }}>
+              <a href="/#" onClick={logOut} className="btn btn-danger btn-sm ml-3">
+                Close
+              </a>
+            </div>
           )}
         </div>
       </div>

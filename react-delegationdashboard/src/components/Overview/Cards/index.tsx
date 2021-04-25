@@ -19,10 +19,9 @@ const Views = () => {
     numberOfActiveNodes,
     address,
     contractOverview,
-    aprPercentageAfterFee,
-    numberOfEligibleNodes,
-    eligibleAprPercentageAfterFee,
+    aprPercentage,
     numUsers,
+    numberOfEligibleNodes,
   } = useContext();
   const [networkStake, setNetworkStake] = useState(new NetworkStake());
 
@@ -36,9 +35,6 @@ const Views = () => {
   };
 
   const isAdmin = () => {
-    if (location.pathname == '/') {
-      return false;
-    }
     let loginAddress = new Address(address).hex();
     return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
   };
@@ -59,14 +55,13 @@ const Views = () => {
   }, []);
 
   return (
-    <div className="cards d-flex flex-wrap">
+    <div className="cards d-flex flex-wrap mr-spacer">
       <StatCard
         title="Contract Stake"
         value={denominate({
           input: totalActiveStake,
           denomination,
-          decimals: 6,
-          showLastNonZeroDecimal: false,
+          decimals,
         })}
         valueUnit={egldLabel}
         color="orange"
@@ -76,27 +71,25 @@ const Views = () => {
             input: totalActiveStake,
             denomination,
             decimals,
-            showLastNonZeroDecimal: false,
           }),
           denominate({
             input: networkStake.TotalStaked.toFixed(),
             denomination,
             decimals,
-            showLastNonZeroDecimal: false,
           })
         )}% of total stake`}
       />
-      <StatCard title="Number of Users" value={numUsers.toString()} color="orange" svg="user.svg" />      
+      <StatCard title="Number of Users" value={numUsers.toString()} color="orange" svg="user.svg" />
       <StatCard
         title="Eligible Nodes"
-        value={numberOfEligibleNodes}
+        value={numberOfEligibleNodes.toString()}
         valueUnit=""
         color="purple"
         svg="nodes.svg"
         percentage={'Currently active reward producing nodes'}
       />
       <StatCard
-        title="All Nodes"
+        title="Number of Nodes"
         value={numberOfActiveNodes}
         valueUnit=""
         color="purple"
@@ -107,13 +100,13 @@ const Views = () => {
         )}% of total nodes`}
       />
       <StatCard
-        title="Computed APR"
-        value={aprPercentageAfterFee}
+        title={'APR (incl. ' + contractOverview.serviceFee + '% fees)'}
+        value={aprPercentage}
         valueUnit=""
         color="orange"
         svg="leaf-solid.svg"
-        percentage="Annual percentage rate average"
-        tooltipText="This is an aproximate APR calculation for this year based on the current epoch"
+        percentage="Annual percentage rate"
+        tooltipText="This is an approximate APR calculation for this year based on the current epoch including our agency fees"
       />
       <StatCard
         title="Service Fee"
@@ -124,7 +117,7 @@ const Views = () => {
       >
         {location.pathname === '/owner' && <SetPercentageFeeAction />}
       </StatCard>
-      {isAdmin() && location.pathname === '/owner' ? (
+      {location.pathname === '/owner' && isAdmin() ? (
         <StatCard
           title="Delegation Cap"
           value={
@@ -132,7 +125,6 @@ const Views = () => {
               decimals,
               denomination,
               input: contractOverview.maxDelegationCap,
-              showLastNonZeroDecimal: false,
             }) || ''
           }
           valueUnit={egldLabel}
@@ -143,13 +135,11 @@ const Views = () => {
               input: totalActiveStake,
               denomination,
               decimals,
-              showLastNonZeroDecimal: false,
             }),
             denominate({
               decimals,
               denomination,
               input: contractOverview.maxDelegationCap,
-              showLastNonZeroDecimal: false,
             })
           )}% filled`}
         >
@@ -160,13 +150,11 @@ const Views = () => {
           decimals,
           denomination,
           input: contractOverview.maxDelegationCap,
-          showLastNonZeroDecimal: false,
         }) !== '0' &&
         denominate({
           decimals,
           denomination,
           input: contractOverview.maxDelegationCap,
-          showLastNonZeroDecimal: false,
         }) !== '' && (
           <StatCard
             title="Delegation Cap"
@@ -175,7 +163,6 @@ const Views = () => {
                 decimals,
                 denomination,
                 input: contractOverview.maxDelegationCap,
-                showLastNonZeroDecimal: false,
               }) || ''
             }
             valueUnit={egldLabel}
@@ -186,20 +173,18 @@ const Views = () => {
                 input: totalActiveStake,
                 denomination,
                 decimals,
-                showLastNonZeroDecimal: false,
               }),
               denominate({
                 decimals,
                 denomination,
                 input: contractOverview.maxDelegationCap,
-                showLastNonZeroDecimal: false,
               })
             )}% filled`}
           ></StatCard>
         )
       )}
 
-      {isAdmin() && location.pathname === '/owner' && (
+      {location.pathname === '/owner' && isAdmin() && (
         <StatCard
           title="Automatic activation"
           value={contractOverview.automaticActivation === 'true' ? 'ON' : 'OFF'}
@@ -209,7 +194,7 @@ const Views = () => {
           <AutomaticActivationAction automaticFlag={contractOverview.automaticActivation} />
         </StatCard>
       )}
-      {isAdmin() && location.pathname === '/owner' && (
+      {location.pathname === '/owner' && isAdmin() && (
         <StatCard
           title="ReDelegate Cap"
           value={contractOverview.reDelegationCap === 'true' ? 'ON' : 'OFF'}

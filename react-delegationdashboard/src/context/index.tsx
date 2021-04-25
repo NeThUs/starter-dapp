@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StateType, initialState, NodeDetails, Nodes } from './state';
+import React from 'react';
+import { StateType, initialState } from './state';
 import { DispatchType, reducer } from './reducer';
 import axios from 'axios';
 
@@ -11,8 +11,8 @@ const Context = React.createContext<StateType | undefined>(undefined);
 const Dispatch = React.createContext<DispatchType | undefined>(undefined);
 
 function ContextProvider({ children }: ContextType) {
-  const [state, dispatch] = React.useReducer(reducer, initialState());
-  const [interval, setInt] = useState<NodeJS.Timeout | undefined>(undefined);
+  const [state, dispatch] = React.useReducer(reducer, initialState());  
+  const [interval, setInt] = React.useState<NodeJS.Timeout | undefined>(undefined);
 
   const getLatestElrondData = async () => {
     await axios.get('https://data.elrond.com/latest/quotes/egld/price').then(res => {
@@ -20,7 +20,7 @@ function ContextProvider({ children }: ContextType) {
     });
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetch = async () => {
       await getLatestElrondData();
     };

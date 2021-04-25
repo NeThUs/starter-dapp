@@ -6,28 +6,23 @@ import { ContextProvider } from './context';
 
 function App() {
   return (
-    <Router>
-        <ContextProvider>
-          <Switch>
-            {routes.map((route, i) => (
-              <Route
-                path={route.path}
-                key={route.path + i}
-                component={route.component}
-                exact={true}
-              >
-                <Layout page={route.page}>
-                  <Route
-                    path={route.path}
-                    key={route.path + i}
-                    component={route.component}
-                    exact={true}
-                  ></Route>
-                </Layout>
-              </Route>
-            ))}
-          </Switch>
-        </ContextProvider>
+    <Router basename={process.env.PUBLIC_URL}>
+      <ContextProvider>
+        <Switch>
+          {routes.map((route, i) => (
+            <Route path={route.path} key={route.path + i} component={route.component} exact={true}>
+              <Layout page={route.page}>
+                <Route
+                  path={route.path}
+                  key={route.path + i}
+                  component={route.component}
+                  exact={true}
+                ></Route>
+              </Layout>
+            </Route>
+          ))}
+        </Switch>
+      </ContextProvider>
     </Router>
   );
 }

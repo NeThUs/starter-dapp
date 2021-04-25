@@ -3,9 +3,8 @@ import BigNumber from 'bignumber.js';
 import denominate from 'components/Denominate/formatters';
 import { denomination, decimals, network } from 'config';
 import { useContext, useDispatch } from 'context';
-import { emptyAgencyMetaData, NodeDetails, Nodes } from 'context/state';
+import { emptyAgencyMetaData, Nodes, NodeDetails } from 'context/state';
 import { contractViews } from 'contracts/ContractViews';
-import axios from 'axios';
 import {
   AgencyMetadata,
   ContractOverview,
@@ -14,16 +13,14 @@ import {
   Stats,
 } from 'helpers/contractDataDefinitions';
 import React from 'react';
-import { getItem, setItem } from 'storage/session';
+import axios from 'axios';
+import { setItem } from 'storage/session';
 import { calculateAPR } from './APRCalculation';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
 const syncNodes = async (): Promise<Nodes> => {
-  if (getItem('nodes')) {
-    return getItem('nodes');
-  }
-  return await axios.get((network.apiAddress as string) + '/node/heartbeatstatus').then(nodes => {
+  return axios.get((network.apiAddress as string) + '/node/heartbeatstatus').then(nodes => {
     let result: Nodes = {};
     const res = nodes.data.data.heartbeats.filter(
       (node: NodeDetails) =>
@@ -37,6 +34,16 @@ const syncNodes = async (): Promise<Nodes> => {
   });
 };
 
+const getStakingSCBalance = async (): Promise<string> => {
+  return await axios
+    .get(
+      'https://api.elrond.com/accounts/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l'
+    )
+    .then(SC => {
+      return SC.data.balance;
+    });
+};
+
 const Layout = ({ children, page }: { children: React.ReactNode; page: string }) => {
   const dispatch = useDispatch();
   const { dapp, delegationContract } = useContext();
@@ -46,6 +53,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
     getBlsKeys,
     getNumUsers,
     getMetaData,
+    getDelegationManagerContractConfig,
   } = contractViews;
 
   const getContractOverviewType = (value: QueryResponse) => {
@@ -53,7 +61,6 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
       decimals,
       denomination,
       input: value.returnData[3].asBigInt.toFixed(),
-      showLastNonZeroDecimal: false,
     });
     return new ContractOverview(
       value.returnData[0].asHex.toString(),
@@ -61,7 +68,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
       value.returnData[2].asBigInt.toFixed(),
       initialOwnerFunds,
       value.returnData[4]?.asString,
-      value.returnData[5].asBool,
+      value.returnData[5]?.asBool,
       value.returnData[6].asBool,
       value.returnData[7]?.asString,
       value.returnData[8].asBool,
@@ -90,10 +97,10 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
       dapp.apiProvider.getNetworkStake(),
       dapp.proxy.getNetworkConfig(),
       dapp.proxy.getNetworkStatus(),
-      syncNodes(),
+      getDelegationManagerContractConfig(dapp),
     ])
       .then(
-        ([
+        async ([
           metaData,
           numUsers,
           contractOverview,
@@ -105,17 +112,29 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
           networkStake,
           networkConfig,
           networkStatus,
-          nodes,
+          delegationManager,
         ]) => {
+          const nodes = await syncNodes();
           dispatch({ type: 'setNodes', nodes });
+          const eligibleNodes = Object.keys(nodes).filter(
+            node => nodes[node].peerType === 'eligible'
+          ).length;
+          dispatch({
+            type: 'setNumberOfEligibleNodes',
+            numberOfEligibleNodes: eligibleNodes,
+          });
           dispatch({
             type: 'setNumUsers',
             numUsers: numUsers.returnData[0].asNumber,
           });
-          const scOverview = getContractOverviewType(contractOverview);
+          dispatch({
+            type: 'setMinDelegationAmount',
+            minDelegationAmount: delegationManager.returnData[5].asNumber,
+          });
+          const contract = getContractOverviewType(contractOverview);
           dispatch({
             type: 'setContractOverview',
-            contractOverview: scOverview,
+            contractOverview: contract,
           });
           dispatch({
             type: 'setAgencyMetaData',
@@ -125,36 +144,10 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             type: 'setTotalActiveStake',
             totalActiveStake: activeStake.asBigInt.toFixed(),
           });
-          const eligibleNodes = Object.keys(nodes).filter(
-            node => nodes[node].peerType === 'eligible'
-          ).length;
           dispatch({
             type: 'setNumberOfActiveNodes',
             numberOfActiveNodes: blsKeys.filter(key => key.asString === 'staked').length.toString(),
           });
-          dispatch({
-            type: 'setNumberOfEligibleNodes',
-            numberOfEligibleNodes: eligibleNodes.toString(),
-          });
-          const APR = calculateAPR({
-            stats: new Stats(networkStats.Epoch),
-            networkConfig: new NetworkConfig(
-              networkConfig.TopUpFactor,
-              networkConfig.RoundDuration,
-              networkConfig.RoundsPerEpoch,
-              networkStatus.RoundsPassedInCurrentEpoch,
-              new BigNumber(networkConfig.TopUpRewardsGradientPoint)
-            ),
-            networkStake: new NetworkStake(
-              networkStake.TotalValidators,
-              networkStake.ActiveValidators,
-              networkStake.QueueSize,
-              new BigNumber(networkStake.TotalStaked)
-            ),
-            blsKeys: blsKeys,
-            totalActiveStake: activeStake.asBigInt.toFixed(),
-          });
-
           dispatch({
             type: 'setNetworkConfig',
             networkConfig: new NetworkConfig(
@@ -162,27 +155,46 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
               networkConfig.RoundDuration,
               networkConfig.RoundsPerEpoch,
               networkStatus.RoundsPassedInCurrentEpoch,
-              new BigNumber(networkConfig.TopUpRewardsGradientPoint)
+              new BigNumber(networkConfig.TopUpRewardsGradientPoint),
+              networkConfig.ChainID
             ),
           });
+          const stakingBalance = await getStakingSCBalance();
+          const APR = parseFloat(
+            calculateAPR({
+              stats: new Stats(networkStats.Epoch),
+              networkConfig: new NetworkConfig(
+                networkConfig.TopUpFactor,
+                networkConfig.RoundDuration,
+                networkConfig.RoundsPerEpoch,
+                networkStatus.RoundsPassedInCurrentEpoch,
+                new BigNumber(networkConfig.TopUpRewardsGradientPoint),
+                networkConfig.ChainID
+              ),
+              networkStake: new NetworkStake(
+                networkStake.TotalValidators,
+                networkStake.ActiveValidators,
+                networkStake.QueueSize,
+                new BigNumber(stakingBalance)
+              ),
+              blsKeys: blsKeys,
+              totalActiveStake: activeStake.asBigInt.toFixed(),
+            })
+          );
           dispatch({
             type: 'setAprPercentage',
-            aprPercentage: APR,
-          });
-          const aprPercentageAfterFee = (
-            parseFloat(APR) -
-            (((parseFloat(scOverview.serviceFee as string) / 100) * parseFloat(APR)) as number)
-          )
-            .toFixed(2)
-            .toString();
-
-          dispatch({
-            type: 'setAprPercentageAfterFee',
-            aprPercentageAfterFee,
+            aprPercentage: (
+              APR -
+              APR * ((contract?.serviceFee ? parseFloat(contract.serviceFee) : 15) / 100)
+            )
+              .toFixed(2)
+              .toString(),
           });
         }
       )
-      .catch(e => {});
+      .catch(e => {
+        console.error('To do ', e);
+      });
   }, []);
 
   return (

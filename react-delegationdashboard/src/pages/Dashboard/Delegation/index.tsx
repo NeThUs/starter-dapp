@@ -12,7 +12,7 @@ import StatCard from 'components/StatCard';
 import { Calculator } from 'components/Calculator';
 
 const MyDelegation = () => {
-  const { dapp, address, egldLabel, delegationContract, loading, eligibleAprPercentageAfterFee } = useContext();
+  const { dapp, address, egldLabel, delegationContract, loading } = useContext();
   const dispatch = useDispatch();
   const {
     getClaimableRewards,
@@ -37,9 +37,8 @@ const MyDelegation = () => {
         setClaimableRewards(
           denominate({
             denomination,
-            decimals,
+            decimals: 4,
             input: value.returnData[0]?.asBigInt.toFixed(),
-            showLastNonZeroDecimal: false,
           }) || ''
         );
       })
@@ -66,7 +65,6 @@ const MyDelegation = () => {
             denomination,
             decimals,
             input: value.returnData[0]?.asBigInt.toFixed(),
-            showLastNonZeroDecimal: false,
           }) || ''
         );
         setUserActiveNominatedStake(value.returnData[0]?.asBigInt.toFixed());

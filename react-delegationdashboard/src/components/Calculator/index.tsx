@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useContext } from 'context';
 import StatCard from 'components/StatCard';
-import { Address } from '@elrondnetwork/erdjs/out';
 
 interface Balance {
   balance?: number
   input?: boolean
 }
 export const Calculator = ({balance = 50, input = true}: Balance) => {
-  const { egldLabel, aprPercentageAfterFee, eligibleAprPercentageAfterFee, aprPercentage, USD, address, contractOverview, nodes } = useContext();
+  const { egldLabel, aprPercentage, USD } = useContext();
   const [daily, setDaily] = useState('0');
   const [weekly, setWeekly] = useState('0');
   const [monthly, setMonthly] = useState('0');
   const [yearly, setYearly] = useState('0');
   const [value, setValue] = useState(balance);
 
-  const isAdmin = () => {
-    let loginAddress = new Address(address).hex();
-    return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
-  };
-  const APR = input ? aprPercentageAfterFee : isAdmin() ? aprPercentage : aprPercentageAfterFee;
+  const APR = aprPercentage;
   const getReward = (value: number) => {
     setValue(value);
   };
@@ -36,8 +31,12 @@ export const Calculator = ({balance = 50, input = true}: Balance) => {
     setMonthly((parseFloat(yearly) / 12).toFixed(4));
     setWeekly((parseFloat(yearly) / 52).toFixed(4));
     setDaily((parseFloat(yearly) / 365).toFixed(4));
-  }, [value,aprPercentageAfterFee , aprPercentageAfterFee, nodes, yearly]);
-  
+  }, [value, aprPercentage, yearly]);
+
+  if (aprPercentage == '...') {
+    return null;
+  }
+
   const cards = [
     {
       label: 'Daily',
@@ -56,10 +55,6 @@ export const Calculator = ({balance = 50, input = true}: Balance) => {
       value: yearly,
     },
   ];
-
-  if (aprPercentageAfterFee == '...') {
-    return null;
-  }
 
   return (
     <div>

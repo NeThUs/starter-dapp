@@ -5,23 +5,23 @@ export type DispatchType = (action: ActionType) => void;
 
 export type ActionType =
   | { type: 'login'; address: StateType['address'] }
+  | { type: 'ledgerLogin'; ledgerLogin: StateType['ledgerLogin'] }
   | { type: 'logout'; provider: StateType['dapp']['provider'] }
   | { type: 'loading'; loading: StateType['loading'] }
   | { type: 'setProvider'; provider: StateType['dapp']['provider'] }
-  | { type: 'setBalance'; balance: StateType['account']['balance'] }
-  | { type: 'setContractOverview'; contractOverview: StateType['contractOverview'] }
+  | { type: 'setAccount'; account: StateType['account'] }  
   | { type: 'setUSD'; USD: StateType['USD'] }
   | { type: 'setNodes'; nodes: StateType['nodes'] }
+  | { type: 'setContractOverview'; contractOverview: StateType['contractOverview'] }  
+  | { type: 'setNumberOfEligibleNodes'; numberOfEligibleNodes: StateType['numberOfEligibleNodes'] }
   | { type: 'setNetworkConfig'; networkConfig: StateType['networkConfig'] }
   | { type: 'setAgencyMetaData'; agencyMetaData: StateType['agencyMetaData'] }
   | { type: 'setNumberOfActiveNodes'; numberOfActiveNodes: StateType['numberOfActiveNodes'] }
-  | { type: 'setNumberOfEligibleNodes'; numberOfEligibleNodes: StateType['numberOfEligibleNodes'] }
   | { type: 'setNumUsers'; numUsers: StateType['numUsers'] }
+  | { type: 'setMinDelegationAmount'; minDelegationAmount: StateType['minDelegationAmount'] }
   | { type: 'setTotalActiveStake'; totalActiveStake: StateType['totalActiveStake'] }
-  | { type: 'setEligibleAprPercentage'; eligibleAprPercentage: StateType['eligibleAprPercentage'] }
-  | { type: 'setEligibleAprPercentageAfterFee'; eligibleAprPercentageAfterFee: StateType['eligibleAprPercentageAfterFee'] }
-  | { type: 'setAprPercentageAfterFee'; aprPercentageAfterFee: StateType['aprPercentageAfterFee'] }
-  | { type: 'setAprPercentage'; aprPercentage: StateType['aprPercentage'] };
+  | { type: 'setAprPercentage'; aprPercentage: StateType['aprPercentage'] }
+  | { type: 'setLedgerAccount'; ledgerAccount: StateType['ledgerAccount'] };
 
 export function reducer(state: StateType, action: ActionType): StateType {
   switch (action.type) {
@@ -36,12 +36,12 @@ export function reducer(state: StateType, action: ActionType): StateType {
         loggedIn: loggedIn,
       };
     }
-
-    case 'loading': {
-      const { loading } = action;
+    case 'ledgerLogin': {
+      const { ledgerLogin } = action;
+      setItem('ledgerLogin', ledgerLogin);
       return {
         ...state,
-        loading,
+        ledgerLogin,
       };
     }
 
@@ -51,6 +51,30 @@ export function reducer(state: StateType, action: ActionType): StateType {
       return {
         ...state,
         nodes,
+      };
+    }
+    
+    case 'setNumberOfEligibleNodes': {
+      const { numberOfEligibleNodes } = action;
+      return {
+        ...state,
+        numberOfEligibleNodes,
+      };
+    }
+
+    case 'setUSD': {
+      const { USD } = action;
+      return {
+        ...state,
+        USD,
+      };
+    }
+
+    case 'loading': {
+      const { loading } = action;
+      return {
+        ...state,
+        loading,
       };
     }
 
@@ -65,22 +89,11 @@ export function reducer(state: StateType, action: ActionType): StateType {
       };
     }
 
-    case 'setUSD': {
-      const { USD } = action;
+    case 'setAccount': {
+      const { account } = action;
       return {
         ...state,
-        USD,
-      };
-    }
-
-    case 'setBalance': {
-      const { balance } = action;
-      return {
-        ...state,
-        account: {
-          ...state.account,
-          balance: balance,
-        },
+        account,
       };
     }
 
@@ -116,19 +129,19 @@ export function reducer(state: StateType, action: ActionType): StateType {
       };
     }
 
-    case 'setNumberOfEligibleNodes': {
-      const { numberOfEligibleNodes } = action;
-      return {
-        ...state,
-        numberOfEligibleNodes,
-      };
-    }
-
     case 'setNumUsers': {
       const { numUsers } = action;
       return {
         ...state,
         numUsers,
+      };
+    }
+
+    case 'setMinDelegationAmount': {
+      const { minDelegationAmount } = action;
+      return {
+        ...state,
+        minDelegationAmount,
       };
     }
 
@@ -148,27 +161,11 @@ export function reducer(state: StateType, action: ActionType): StateType {
       };
     }
 
-    case 'setEligibleAprPercentageAfterFee': {
-      const { eligibleAprPercentageAfterFee } = action;
+    case 'setLedgerAccount': {
+      const { ledgerAccount } = action;
       return {
         ...state,
-        eligibleAprPercentageAfterFee,
-      };
-    }
-
-    case 'setEligibleAprPercentage': {
-      const { eligibleAprPercentage } = action;
-      return {
-        ...state,
-        eligibleAprPercentage,
-      };
-    }
-
-    case 'setAprPercentageAfterFee': {
-      const { aprPercentageAfterFee } = action;
-      return {
-        ...state,
-        aprPercentageAfterFee,
+        ledgerAccount,
       };
     }
 
@@ -180,6 +177,7 @@ export function reducer(state: StateType, action: ActionType): StateType {
         .catch(e => console.error('logout', e));
       removeItem('logged_in');
       removeItem('address');
+      removeItem('ledgerLogin');
       return initialState();
     }
 
