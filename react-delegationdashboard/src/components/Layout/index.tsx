@@ -1,7 +1,7 @@
 import { QueryResponse } from '@elrondnetwork/erdjs/out/smartcontracts/query';
 import BigNumber from 'bignumber.js';
 import denominate from 'components/Denominate/formatters';
-import { denomination, decimals, network } from 'config';
+import { denomination, decimals, network, auctionContract} from 'config';
 import { useContext, useDispatch } from 'context';
 import { emptyAgencyMetaData, Nodes, NodeDetails } from 'context/state';
 import { contractViews } from 'contracts/ContractViews';
@@ -35,13 +35,12 @@ const syncNodes = async (): Promise<Nodes> => {
 };
 
 const getStakingSCBalance = async (): Promise<string> => {
-  return await axios
-    .get(
-      'https://api.elrond.com/accounts/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllst77y4l'
-    )
-    .then(SC => {
-      return SC.data.balance;
-    });
+  const result =  await axios.get(`${network.apiAddress}/accounts/${auctionContract}`);
+  if(result.status) {
+    return result.data.balance;
+  } else {
+    return '0';
+  }
 };
 
 const Layout = ({ children, page }: { children: React.ReactNode; page: string }) => {
