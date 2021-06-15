@@ -30,7 +30,7 @@ const allowedActions: { [key: string]: ActionType[] } = {
 };
 
 const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
-  const { explorerAddress, dapp, ledgerAccount, walletConnectAccount } = useContext();
+  const { explorerAddress, dapp, ledgerAccount, walletConnectAccount, nodes } = useContext();
   const [showCheckYourLedgerModal, setShowCheckYourLedgerModal] = useState(false);
   const [transactionArguments, setTransactionArguments] = useState(
     new DelegationTransactionType('', '')

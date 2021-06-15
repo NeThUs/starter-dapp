@@ -45,6 +45,21 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
     getDelegationManagerContractConfig,
   } = contractViews;
 
+  const syncNodes = async (): Promise<Nodes> => {
+    return axios.get((network.apiAddress as string) + '/node/heartbeatstatus').then(nodes => {
+      let result: Nodes = {};
+      const res = nodes.data.data.heartbeats.filter(
+        (node: NodeDetails) =>
+          node.identity === 'truststaking' && !node.nodeDisplayName.includes('Private')
+      );
+      res.forEach((node: NodeDetails) => {
+        result[node.publicKey] = node;
+      });
+      setItem('nodes', result);
+      return result;
+    });
+  };
+
   const getContractOverviewType = (value: QueryResponse) => {
     let untypedResponse = value.outputUntyped();
     let initialOwnerFunds = denominate({
@@ -104,6 +119,15 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             networkStatus,
             delegationManager,
           ]) => {
+            const nodes = await syncNodes();
+            dispatch({ type: 'setNodes', nodes });
+            const eligibleNodes = Object.keys(nodes).filter(
+              node => nodes[node].peerType === 'eligible'
+            ).length;
+            dispatch({
+              type: 'setNumberOfEligibleNodes',
+              numberOfEligibleNodes: eligibleNodes,
+            });
             dispatch({
               type: 'setNumUsers',
               numUsers: decodeUnsignedNumber(numUsers.outputUntyped()[0]),

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import * as React from 'react';
 import { decimals, denomination } from 'config';
 import { useContext } from 'context';
@@ -37,11 +38,6 @@ const Views = () => {
   const isAdmin = () => {
     let loginAddress = new Address(address).hex();
     return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
-  };
-
-  const isOwnerPath = () => {
-    let currentURL = window.location.pathname;
-    return currentURL.includes('owner') === true;
   };
 
   const getNetworkStake = () => {

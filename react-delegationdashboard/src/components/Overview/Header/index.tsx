@@ -25,11 +25,6 @@ const Header = () => {
     return loginAddress.localeCompare(contractOverview.ownerAddress) === 0;
   };
 
-  const isOwnerPath = () => {
-    let currentURL = window.location.pathname;
-    return currentURL.includes('owner') === true;
-  };
-
   const fetchLedger = () => {
     if (getItem('ledgerLogin') && !ledgerAccount) {
       const ledgerLogin = getItem('ledgerLogin');
@@ -46,6 +41,7 @@ const Header = () => {
   const logOut = () => {
     dispatch({ type: 'logout', provider: dapp.provider });
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fetchLedger, []);
   const fetchWalletConnect = () => {
     if (getItem('walletConnectLogin') && !walletConnectAccount) {
@@ -79,7 +75,7 @@ const Header = () => {
             </Link>
           ) : null}
 
-          {isAdmin() && pathname == '/owner' ? <SetAgencyMetaDataModal /> : null}
+          {isAdmin() && pathname === '/owner' ? <SetAgencyMetaDataModal /> : null}
           {loggedIn && (
             <div className="d-flex align-items-center" style={{ minWidth: 0 }}>
               <a href="/#" onClick={logOut} className="btn btn-danger btn-sm ml-3">

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { StateType, initialState } from './state';
 import { DispatchType, reducer } from './reducer';

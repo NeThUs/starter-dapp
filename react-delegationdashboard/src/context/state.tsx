@@ -130,6 +130,9 @@ export const emptyContractOverview: ContractOverview = {
 export const initialState = (): {
   denomination: number;
   decimals: number;
+  USD: number,
+  numberOfEligibleNodes: number,
+  nodes: Nodes,
   dapp: {
     provider: HWProvider | WalletProvider | WalletConnectProvider;
     proxy: ProxyProvider;

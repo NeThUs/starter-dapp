@@ -31,7 +31,7 @@ export const contractViews = {
     const query = new Query({
       address: new Address(delegationContract),
       func: new ContractFunction('getTotalCumulatedRewardsForUser'),
-      args: [Argument.fromPubkey(new Address(address))],
+      args: [new AddressValue(new Address(address))],
     });
     return dapp.proxy.queryContract(query);
   },

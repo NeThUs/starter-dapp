@@ -47,14 +47,15 @@ const MyDelegation = () => {
       .catch(e => console.error('getClaimableRewards error', e));
     getTotalCumulatedRewardsForUser(dapp, address, delegationContract)
       .then(value => {
-        if (value.returnData.length > 0 && value.returnData[0]?.asNumber !== 0) {
+        const untypedResponse = value.outputUntyped();
+        if (untypedResponse.length > 0 && decodeUnsignedNumber(untypedResponse[0]) !== 0) {
           setDisplayCumulatedRewards(true);
         }
         setCumulatedRewards(
           denominate({
             denomination,
             decimals,
-            input: value.returnData[0]?.asBigInt.toString(),
+            input: decodeBigNumber(untypedResponse[0]).toFixed(),
             showLastNonZeroDecimal: false,
           }) || ''
         );
