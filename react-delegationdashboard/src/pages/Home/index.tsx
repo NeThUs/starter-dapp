@@ -7,6 +7,7 @@ import { useContext } from 'context';
 import WalletLogin from './Login/Wallet';
 import Views from 'components/Overview/Cards';
 import { Calculator } from 'components/Calculator';
+import WalletConnectLogin from './Login/WalletConnect';
 
 const Home = () => {
   const { loading, error, loggedIn } = useContext();
@@ -36,10 +37,14 @@ const Home = () => {
               <h4 className="title">Delegation Manager</h4>
               <hr className="divider"/>
               <div>
-                <a href={process.env.PUBLIC_URL + '/ledger'} className="btn btn-primary px-sm-spacer mx-1 mx-sm-3">
+                <a
+                  href={process.env.PUBLIC_URL + '/ledger'}
+                  className="btn btn-primary px-sm-spacer mx-1 mx-sm-3"
+                >
                   Ledger
                 </a>
                 <WalletLogin />
+                <WalletConnectLogin />
               </div>
             </div>
           </div>
