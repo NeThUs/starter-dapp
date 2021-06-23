@@ -23,6 +23,7 @@ const SetAgencyMetaDataModal = () => {
     const hexKeyBase = Buffer.from(values.keybase).toString('hex');
     const data = hexName + '@' + hexWeb + '@' + hexKeyBase;
     let txArguments = new DelegationTransactionType('0', 'setMetaData', data);
+    console.log(txArguments);
     if (ledgerAccount || walletConnectAccount) {
       setShowDelegateModal(false);
       setTransactionArguments(txArguments);

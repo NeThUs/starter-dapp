@@ -24,6 +24,7 @@ const SetPercentageFeeAction = () => {
   };
   const handleUpdateFee = (value: string) => {
     let txArguments = new DelegationTransactionType('0', 'changeServiceFee', nominateVal(value));
+    console.log(txArguments);
     if (ledgerAccount || walletConnectAccount) {
       setShowUpdateFeeModal(false);
       setTransactionArguments(txArguments);
