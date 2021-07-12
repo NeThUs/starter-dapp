@@ -10,6 +10,7 @@ import State from 'components/State';
 import { denomination, decimals } from 'config';
 import StatCard from 'components/StatCard';
 import { Calculator } from 'components/Calculator';
+import { decodeBigNumber, decodeUnsignedNumber } from '@elrondnetwork/erdjs';
 
 const MyDelegation = () => {
   const { dapp, address, egldLabel, delegationContract, loading } = useContext();
@@ -31,28 +32,30 @@ const MyDelegation = () => {
     dispatch({ type: 'loading', loading: true });
     getClaimableRewards(dapp, address, delegationContract)
       .then(value => {
-        if (value.returnData.length > 0 && value.returnData[0]?.asNumber !== 0) {
+        const untypedResponse = value.outputUntyped();
+        if (untypedResponse.length > 0 && decodeUnsignedNumber(untypedResponse[0]) !== 0) {
           setDisplayRewards(true);
         }
         setClaimableRewards(
           denominate({
             denomination,
             decimals: 4,
-            input: value.returnData[0]?.asBigInt.toFixed(),
+            input: decodeBigNumber(untypedResponse[0]).toFixed(),
           }) || ''
         );
       })
       .catch(e => console.error('getClaimableRewards error', e));
     getTotalCumulatedRewardsForUser(dapp, address, delegationContract)
       .then(value => {
-        if (value.returnData.length > 0 && value.returnData[0]?.asNumber !== 0) {
+        const untypedResponse = value.outputUntyped();
+        if (untypedResponse.length > 0 && decodeUnsignedNumber(untypedResponse[0]) !== 0) {
           setDisplayCumulatedRewards(true);
         }
         setCumulatedRewards(
           denominate({
             denomination,
             decimals,
-            input: value.returnData[0]?.asBigInt.toString(),
+            input: decodeBigNumber(untypedResponse[0]).toFixed(),
             showLastNonZeroDecimal: false,
           }) || ''
         );
@@ -60,15 +63,16 @@ const MyDelegation = () => {
       .catch(e => console.error('getTotalCumulatedRewardsForUser error', e));
     getUserActiveStake(dapp, address, delegationContract)
       .then(value => {
+        const untypedResponse = value.outputUntyped();
         setUserActiveStake(
           denominate({
             denomination,
             decimals,
-            input: value.returnData[0]?.asBigInt.toFixed(),
+            input: decodeBigNumber(untypedResponse[0]).toFixed(),
           }) || ''
         );
-        setUserActiveNominatedStake(value.returnData[0]?.asBigInt.toFixed());
-        if (value.returnData.length > 0 && value.returnData[0]?.asNumber !== 0) {
+        setUserActiveNominatedStake(decodeBigNumber(untypedResponse[0]).toFixed());
+        if (untypedResponse.length > 0 && decodeUnsignedNumber(untypedResponse[0]) !== 0) {
           setDisplayUndelegate(true);
         }
 
@@ -83,7 +87,8 @@ const MyDelegation = () => {
       });
   };
 
-  React.useEffect(getAllData, []);
+  React.useEffect(getAllData, /* eslint-disable react-hooks/exhaustive-deps */ []);
+
   return (
     <>
       {loading ? (

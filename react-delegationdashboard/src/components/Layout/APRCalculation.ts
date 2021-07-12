@@ -1,4 +1,4 @@
-import { ContractReturnData } from '@elrondnetwork/erdjs/out/smartcontracts/query';
+import { decodeString } from '@elrondnetwork/erdjs';
 import denominate from 'components/Denominate/formatters';
 import {
   yearSettings,
@@ -22,22 +22,25 @@ const denominateValue = (value: string) => {
 };
 
 const calculateAPR = ({
-  stats: stats,
-  networkConfig: networkConfig,
-  networkStake: networkStake,
-  blsKeys: blsKeys,
-  totalActiveStake: totalActiveStake,
+  stats,
+  networkConfig,
+  networkStake,
+  blsKeys,
+  totalActiveStake,
 }: {
   stats: Stats;
   networkConfig: NetworkConfig;
   networkStake: NetworkStake;
-  blsKeys: ContractReturnData[];
+  blsKeys: Buffer[];
   totalActiveStake: string;
 }) => {
   const allNodes = blsKeys.filter(
-    key => key.asString === 'staked' || key.asString === 'jailed' || key.asString === 'queued'
+    key =>
+      decodeString(key) === 'staked' ||
+      decodeString(key) === 'jailed' ||
+      decodeString(key) === 'queued'
   ).length;
-  const allActiveNodes = blsKeys.filter(key => key.asString === 'staked').length;
+  const allActiveNodes = blsKeys.filter(key => decodeString(key) === 'staked').length;
   if (allActiveNodes <= 0) {
     return '0.00';
   }
@@ -65,7 +68,7 @@ const calculateAPR = ({
     ((2 * topUpRewardsLimit) / Math.PI) *
     Math.atan(
       networkTopUpStake /
-        parseInt(denominateValue(networkConfig.topUpRewardsGradientPoint.toFixed()))
+        (2 * parseInt(denominateValue(networkConfig.topUpRewardsGradientPoint.toFixed())))
     );
   const baseReward = rewardsPerEpochWithoutProtocolSustainability - topUpReward;
   const validatorTotalStake = parseInt(denominateValue(totalActiveStake));

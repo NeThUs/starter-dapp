@@ -24,6 +24,7 @@ export const Calculator = ({balance = 50, input = true}: Balance) => {
     setMonthly((parseFloat(yearly) / 12).toFixed(4));
     setWeekly((parseFloat(yearly) / 52).toFixed(4));
     setDaily((parseFloat(yearly) / 365).toFixed(4));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -31,9 +32,9 @@ export const Calculator = ({balance = 50, input = true}: Balance) => {
     setMonthly((parseFloat(yearly) / 12).toFixed(4));
     setWeekly((parseFloat(yearly) / 52).toFixed(4));
     setDaily((parseFloat(yearly) / 365).toFixed(4));
-  }, [value, aprPercentage, yearly]);
+  }, [value, aprPercentage, yearly, APR]);
 
-  if (aprPercentage == '...') {
+  if (aprPercentage === '...') {
     return null;
   }
 

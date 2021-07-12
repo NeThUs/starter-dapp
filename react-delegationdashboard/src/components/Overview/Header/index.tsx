@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Address } from '@elrondnetwork/erdjs/out';
+import { Address } from '@elrondnetwork/erdjs';
 import { useContext, useDispatch } from 'context';
 import SetAgencyMetaDataModal from './SetAgencyMetaDataModal';
 import { getItem } from 'storage/session';
@@ -17,6 +17,7 @@ const Header = () => {
     loggedIn,
     account,
     dapp,
+    walletConnectAccount,
   } = useContext();
 
   const isAdmin = () => {
@@ -40,7 +41,18 @@ const Header = () => {
   const logOut = () => {
     dispatch({ type: 'logout', provider: dapp.provider });
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fetchLedger, []);
+  const fetchWalletConnect = () => {
+    if (getItem('walletConnectLogin') && !walletConnectAccount) {
+      dispatch({
+        type: 'setWalletConnectAccount',
+        walletConnectAccount: address,
+      });
+    }
+  };
+  useEffect(fetchLedger, /* eslint-disable react-hooks/exhaustive-deps */ []);
+  useEffect(fetchWalletConnect, /* eslint-disable react-hooks/exhaustive-deps */ []);
 
   return (
     <div className="card-header align-items-center border-0 justify-content-between">
@@ -63,7 +75,7 @@ const Header = () => {
             </Link>
           ) : null}
 
-          {isAdmin() && pathname == '/owner' ? <SetAgencyMetaDataModal /> : null}
+          {isAdmin() && pathname === '/owner' ? <SetAgencyMetaDataModal /> : null}
           {loggedIn && (
             <div className="d-flex align-items-center" style={{ minWidth: 0 }}>
               <a href="/#" onClick={logOut} className="btn btn-danger btn-sm ml-3">

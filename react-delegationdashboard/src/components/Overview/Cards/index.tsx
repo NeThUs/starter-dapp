@@ -1,9 +1,10 @@
+/* eslint-disable no-restricted-globals */
 import * as React from 'react';
 import { decimals, denomination } from 'config';
 import { useContext } from 'context';
 import denominate from 'components/Denominate/formatters';
 import StatCard from 'components/StatCard';
-import { Address, NetworkStake } from '@elrondnetwork/erdjs/out';
+import { Address, NetworkStake } from '@elrondnetwork/erdjs';
 import { useState } from 'react';
 
 import SetPercentageFeeAction from './SetPercentageFeeAction';
@@ -50,9 +51,12 @@ const Views = () => {
       });
   };
 
-  React.useEffect(() => {
-    getNetworkStake();
-  }, []);
+  React.useEffect(
+    () => {
+      getNetworkStake();
+    },
+    /* eslint-disable react-hooks/exhaustive-deps */ []
+  );
 
   return (
     <div className="cards d-flex flex-wrap mr-spacer">
@@ -105,8 +109,8 @@ const Views = () => {
         valueUnit=""
         color="orange"
         svg="leaf-solid.svg"
-        percentage="Annual percentage rate"
-        tooltipText="This is an approximate APR calculation for this year based on the current epoch including our agency fees"
+        percentage="Annual percentage rate incl. service fee"
+        tooltipText="This is an approximate APR calculation for this year based on the current epoch"
       />
       <StatCard
         title="Service Fee"
