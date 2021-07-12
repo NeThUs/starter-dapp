@@ -37,7 +37,7 @@ export interface Nodes {
 }
 export interface NodeDetails {
   timeStamp: string;
-  publicKey: string;
+  bls: string;
   versionNumber: string;
   nodeDisplayName: string;
   identity: string;
@@ -46,7 +46,7 @@ export interface NodeDetails {
   maxInactiveTime: string;
   receivedShardID: number;
   computedShardID: number;
-  peerType: string;
+  status: string;
   isActive: boolean;
   nonce: number;
   numInstances: number;

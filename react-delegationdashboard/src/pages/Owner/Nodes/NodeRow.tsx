@@ -114,7 +114,7 @@ const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
       <td>
         <div className="d-flex align-items-center text-nowrap trim">
           <span className={`badge badge-sm badge-light-${statusColor} text-${statusColor}`}>
-            {nodes[key.blsKey] ? nodes[key.blsKey].peerType : 'Not Running'}
+            {nodes[key.blsKey] ? nodes[key.blsKey].status : 'Not Running'}
           </span>
         </div>
       </td>

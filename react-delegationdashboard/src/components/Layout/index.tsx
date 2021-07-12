@@ -46,14 +46,11 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
   } = contractViews;
 
   const syncNodes = async (): Promise<Nodes> => {
-    return axios.get((network.apiAddress as string) + '/node/heartbeatstatus').then(nodes => {
+    return axios.get((network.apiAddress as string) + '/nodes?identity=truststakingus&from=0&size=100').then(nodes => {
       let result: Nodes = {};
-      const res = nodes.data.data.heartbeats.filter(
-        (node: NodeDetails) =>
-          node.identity === 'truststaking' && !node.nodeDisplayName.includes('Private')
-      );
+      const res = nodes.data;
       res.forEach((node: NodeDetails) => {
-        result[node.publicKey] = node;
+        result[node.bls] = node;
       });
       setItem('nodes', result);
       return result;
@@ -122,7 +119,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
             const nodes = await syncNodes();
             dispatch({ type: 'setNodes', nodes });
             const eligibleNodes = Object.keys(nodes).filter(
-              node => nodes[node].peerType === 'eligible'
+              node => nodes[node].status === 'eligible'
             ).length;
             dispatch({
               type: 'setNumberOfEligibleNodes',
