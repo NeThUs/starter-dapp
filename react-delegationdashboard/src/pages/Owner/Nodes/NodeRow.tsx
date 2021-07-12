@@ -84,7 +84,7 @@ const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
       <td>
         <div className="d-flex align-items-center text-nowrap trim">
         <span className="text-truncate">
-            {nodes[key.blsKey] ? nodes[key.blsKey].nodeDisplayName : key.blsKey}
+            {nodes[key.blsKey] ? nodes[key.blsKey].name : key.blsKey}
           </span>
           <a
             href={`${explorerAddress}nodes/${key.blsKey}`}

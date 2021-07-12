@@ -46,11 +46,13 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
   } = contractViews;
 
   const syncNodes = async (): Promise<Nodes> => {
-    return axios.get((network.apiAddress as string) + '/nodes?identity=truststakingus&from=0&size=100').then(nodes => {
+    return axios.get((network.apiAddress as string) + '/nodes?identity=truststaking&from=0&size=100').then(nodes => {
       let result: Nodes = {};
       const res = nodes.data;
       res.forEach((node: NodeDetails) => {
-        result[node.bls] = node;
+        if (!node.name.includes('Private')) {
+          result[node.bls] = node;
+        }
       });
       setItem('nodes', result);
       return result;

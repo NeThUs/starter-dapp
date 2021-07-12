@@ -39,7 +39,7 @@ export interface NodeDetails {
   timeStamp: string;
   bls: string;
   versionNumber: string;
-  nodeDisplayName: string;
+  name: string;
   identity: string;
   totalUpTimeSec: number;
   totalDownTimeSec: number;
