@@ -26,13 +26,27 @@ const Home = () => {
       ) : loading ? (
         <State icon={faCircleNotch} iconClass="fa-spin text-primary" />
       ) : (
-        <div className="m-auto login-container">
+        <div className="m-auto login-container"><Logo className="logo mb-spacer" />
+        <div className="dashboard w-100">
+         <div className="card border-0">
+          <div className="card-body pt-0 px-spacer">
+           <h3 className="p-spacer pb-0 text-center">NTH Inc Delegation Manager</h3>
+          </div>
+         </div>
+        </div>
           <div className="card my-spacer text-center">
+        <div className="dashboard w-100">
+         <div className="card border-0">
+          <div className="card-body pt-0 px-spacer pb-spacer">
+           <p className="text-center">You can find us on telegram: </p>
+           <h4 className="text-center"><a href="https://t.me/NTHIncAg" target="_blank">NTH Inc</a></h4>
+          </div>
+         </div>
+        </div>
             <div className="card-body p-spacer mx-lg-spacer">
-              <Logo className="logo mb-spacer" />
-              <h4 className="mb-spacer">Elrond Delegation Manager</h4>
+              <Logo className="logo mb-spacer" /> 
               <p className="lead mb-spacer">
-                Delegate Elrond ({egldLabel}) and earn up to 25% APY!
+                Delegate Elrond ({egldLabel}) and earn up to 16% APY!
               </p>
               <p className="mb-spacer">Please select your login method:</p>
               <div>
