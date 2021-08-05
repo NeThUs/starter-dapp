@@ -26,10 +26,10 @@ const Home = () => {
       ) : loading ? (
         <State icon={faCircleNotch} iconClass="fa-spin text-primary" />
       ) : (
-        <div className="m-auto login-container"><Logo className="logo mb-spacer" />
+        <div className="m-auto login-container">
         <div className="dashboard w-100">
          <div className="card border-0">
-          <div className="card-body pt-0 px-spacer">
+          <div className="card-body px-spacer">
            <h3 className="p-spacer pb-0 text-center">NTH Inc Delegation Manager</h3>
           </div>
          </div>
