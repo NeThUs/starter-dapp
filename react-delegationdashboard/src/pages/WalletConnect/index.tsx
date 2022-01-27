@@ -5,7 +5,6 @@ import { useContext, useDispatch } from 'context';
 import { WalletConnectProvider } from '@elrondnetwork/erdjs';
 import { walletConnectBridge, walletConnectDeepLink } from 'config';
 
-
 const WalletConnect = () => {
   const { dapp } = useContext();
   const dispatch = useDispatch();
@@ -86,9 +85,6 @@ const WalletConnect = () => {
 
           <h4 className="mb-3">Connect Maiar</h4>
           <p className="lead mb-0">
-            {isFromMobile
-              ? 'Confirm the connection in the Maiar app'
-              : 'Scan the QR code using Maiar'}
             {isFromMobile ? (
               <>
                 <p className="lead mb-0">
