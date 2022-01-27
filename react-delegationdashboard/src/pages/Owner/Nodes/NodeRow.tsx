@@ -71,7 +71,12 @@ const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
         .catch(e => console.error('fetchUnBondPeriod error ', e));
     }
   };
-
+  const formatDuration = (ms: number) => {
+    const days = Math.floor(ms / 8.64e7);
+    const msOnLastDay = ms - days * 8.64e7;
+    return (days < 10 ? '0' + days : days) + ':' + moment.utc(msOnLastDay).format('HH:mm:ss');
+  };
+  
   React.useEffect(
     fetchUnBondPeriod,
     /* eslint-disable react-hooks/exhaustive-deps */ [key.blsKey, key.status]
@@ -133,10 +138,7 @@ const NodeRow = ({ blsKey: key }: { blsKey: NodeType; index: number }) => {
                   {nodeActions[action].label}{' '}
                   {action === 'unBond' && remaining !== 0 && (
                     <span className="text-muted">
-                      (
-                      {moment
-                        .utc(moment.duration(remaining, 'seconds').asMilliseconds())
-                        .format('D:HH:mm:ss')}{' '}
+                      ({formatDuration(moment.duration(remaining, 'seconds').asMilliseconds())}{' '}
                       left)
                     </span>
                   )}
